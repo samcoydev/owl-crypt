@@ -1,13 +1,11 @@
 from flask_socketio import SocketIO
 from flask import Flask, request
 from flask_socketio import emit
-import engine.engine as e
+from core.engine import engine as e
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret"
 socketio = SocketIO(app, port=3232, cors_allowed_origins="http://localhost:3000", logger=True, engineio_logger=True)
-
-game_engine = e.Engine(socketio)
 
 
 @socketio.on('connect')
@@ -53,3 +51,4 @@ def set_ready():
 
 if __name__ == '__main__':
     socketio.run(app)
+    game_engine = e.Engine(socketio)

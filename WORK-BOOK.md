@@ -163,16 +163,30 @@ Character Stats can be affected by currently equipped items
 
 HP, SP, and RP do NOT regenerate. Player is required to rely on teammates and items to regenerate these.
 
-Class
-
 Health Points
 Spell Points
 Rigidity Points (Defense related stuff. This will be affected by armor, class, and currently active spells)
 
 Carry Weight Limit
 
-Physical Damage
-Magic Damage
+Base Attack Damage
+Base Magic Damage
+
+
+## Difficulty Scaling
+
+Enemy levels are determined by the highest level player. Stat multipliers are determined by difficulty mode.
+
+If one level into hp is equal to 10 hp for a player, that will be "normal" a difficulty multiplier. Easy mode would be
+an enemy's one level into hp is equal to 5 hp. Hard mode would be an enemy's one level into hp is equal to 15 hp. And
+nightmare difficulty would be an enemy's one level into hp is equal to 20 hp.
+
+Easy mode would be 0.5x multiplier
+Normal mode would be 1x multiplier
+Hard mode would be 1.5x multiplier
+Nightmare mode would be 2x multiplier
+
+Difficulty will NEVER have an effect on the player scaling. Only the enemies.
 
 ## Raspberry Pi Configurations
 

@@ -1,9 +1,8 @@
-from typing import Tuple
-
-import dungeon_modules.base.dungeon_pieces.dungeon_base as dungeon_base
-import dungeon_modules.base.dungeon_pieces.room_base as room_base
-import dungeon_modules.base.dungeon_pieces.doorway_base as doorway_base
-import dungeon_modules.base.types.direction_type as direction_type
+import core.stock.components.dungeon_base as dungeon_base
+import core.stock.components.room_base as room_base
+import core.stock.components.doorway_base as doorway_base
+import core.base.types.direction_type as direction_type
+from base.types.enemy_type import EnemyType
 
 
 class DungeonTestUtils:
@@ -40,3 +39,29 @@ class DungeonTestUtils:
                 return "This is test room B"
 
         return TestRoomA, TestRoomB
+
+    @staticmethod
+    def create_test_enemy_type():
+        class MockEnemyType(EnemyType):
+            def get_death_dialog(self) -> str:
+                return "Mock Death Dialog"
+
+            def get_attack_dialog(self) -> str:
+                return "Mock Attack Dialog"
+
+            def get_damaged_dialog(self) -> str:
+                return "Mock Damaged Dialog"
+
+            def get_encounter_dialog(self) -> str:
+                return "Mock Encounter Dialog"
+
+            def get_stat_distribution(self):
+                return {
+                    "health_points": 25,
+                    "spell_points": 5,
+                    "rigidity_points": 30,
+                    "base_attack_damage": 40,
+                    "base_magic_damage": 0
+                }
+
+        return MockEnemyType("MockEnemy", 1)
