@@ -8,9 +8,10 @@ if TYPE_CHECKING:
 
 class Command(ABC):
 
-    def __init__(self, game_engine, requires_args: bool = False):
+    def __init__(self, game_engine, command_type: str = "global", requires_args: bool = False):
         self.game_engine: 'e.Engine' = game_engine
         self.requires_args = requires_args
+        self.command_type = command_type
 
     @abstractmethod
     def execute(self, user: 'u.User', args: List[str]):

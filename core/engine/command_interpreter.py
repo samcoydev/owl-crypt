@@ -21,6 +21,15 @@ class CommandInterpreter:
             return "Unknown command"
 
         new_command = command_registry[command_name]
+        current_state = self.engine.game_state_machine.current_state
+
+        if current_state == self.engine.game_state_machine.lobby:
+            if new_command.command_type != "lobby" and new_command.command_type != "global":
+                return "You can't do that right now"
+        else:
+            if new_command.command_type == "lobby":
+                return "You can't do that right now"
+
         if new_command.requires_args and len(args) == 0:
             return "Please provide the necessary arguments. Use HELP for more information"
 

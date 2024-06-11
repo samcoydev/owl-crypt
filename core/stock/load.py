@@ -22,10 +22,18 @@ def load_mod(engine):
 
 
 def register_commands(engine):
-    commands: List[Type['Command']] = [Attack, Block, Cast, Help, Inspect, Inventory, Sneak, SpellBook, Use, Characters,
-                                       Dungeons, Difficulty, Lobby, Pick, Ready, Select, Start, Upgrade]
-    for command in commands:
-        register_command()(command(engine))
+    game_commands = [Attack, Block, Cast, Inspect, Inventory, Sneak, SpellBook, Use]
+    lobby_commands = [Characters, Dungeons, Difficulty, Lobby, Pick, Ready, Select, Start, Upgrade]
+    global_commands = [Help]
+
+    for command in game_commands:
+        register_command()(command(engine, "game"))
+
+    for command in lobby_commands:
+        register_command()(command(engine, "lobby"))
+
+    for command in global_commands:
+        register_command()(command(engine, "global"))
 
 
 def register_character_classes():

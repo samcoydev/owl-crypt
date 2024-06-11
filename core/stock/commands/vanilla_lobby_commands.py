@@ -125,8 +125,8 @@ class Lobby(c.Command):
 
 
 class Pick(c.Command):
-    def __init__(self, game_engine):
-        super().__init__(game_engine=game_engine, requires_args=True)
+    def __init__(self, game_engine, command_type):
+        super().__init__(command_type=command_type, game_engine=game_engine, requires_args=True)
 
     def execute(self, user: 'u.User', args: list):
         character_name = " ".join(args)
@@ -145,8 +145,8 @@ class Ready(c.Command):
 
 
 class Select(c.Command):
-    def __init__(self, game_engine):
-        super().__init__(game_engine=game_engine, requires_args=True)
+    def __init__(self, game_engine, command_type):
+        super().__init__(command_type=command_type, game_engine=game_engine, requires_args=True)
 
     def execute(self, user: 'u.User', args: List[str]):
         dungeon = dungeon_registry.dungeon_registry.get(args[0])
@@ -170,8 +170,8 @@ class Start(c.Command):
 
 
 class Upgrade(c.Command):
-    def __init__(self, game_engine):
-        super().__init__(game_engine=game_engine, requires_args=True)
+    def __init__(self, game_engine, command_type):
+        super().__init__(command_type=command_type, game_engine=game_engine, requires_args=True)
 
     def execute(self, user: 'u.User', args: List[str]):
         if user.chosen_character is None:
