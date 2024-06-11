@@ -4,19 +4,27 @@ import core.base.objects.command as c
 
 import core.base.objects.user as u
 import engine.dungeon_registry as dungeon_registry
+from engine.character_registry import class_registry
 
 
 class Characters(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
-        if len(user.characters) == 0:
-            return "You have no characters"
-
         if len(args) == 0:
+            if len(user.characters) == 0:
+                return "You have no characters"
+
             characters_string = "Characters:\n"
             for character in user.characters:
                 characters_string += f"{character.character_name} - {character.class_name}\n"
 
             return characters_string
+
+        if args[0].lower() == "create":
+            if len(args) < 3:
+                return "Please provide a name and class for your character\n\n" + self.get_possible_classes_string()
+            if len(args) > 3:
+                return "Character name cannot contain spaces\n"
+            return self.create_character(user, args[1], args[2])
 
         character_name = " ".join(args).lower()
 
@@ -26,8 +34,36 @@ class Characters(c.Command):
             else:
                 return "You do not have a character with that name"
 
+    def create_character(self, user: 'u.User', character_name: str, class_name: str):
+        if character_name is None or character_name == "":
+            return "Please provide a name for your character"
+
+        if len(character_name) > 20:
+            return "Character name is too long"
+
+        if class_name is None or class_name == "" or class_name not in class_registry.keys():
+            return "Please provide a valid class for your character\n\n" + self.get_possible_classes_string()
+
+        if len(user.characters) >= 5:
+            return "You already have the maximum amount of characters"
+
+        for character in user.characters:
+            if character.character_name.lower() == character_name.lower():
+                return "You already have a character with that name"
+
+        user.create_new_character(character_name, class_name)
+        return f"Created character {character_name}"
+
+    def get_possible_classes_string(self) -> str:
+        result = "Possible classes:\n"
+        for class_name in class_registry.keys():
+            class_name = " ".join(class_name).replace("_", " ").lower()
+            result += f"{class_name.capitalize()}\n"
+        return result
+
     def get_help_string(self) -> str:
-        return "Show the list of your characters\nCHARACTERS <name> - View a specific character's statistics"
+        return ("Show the list of your characters\nCHARACTERS <name> - View a specific character's "
+                "statistics\nCHARACTERS CREATE <name> <class> - Create a new character\n")
 
 
 class Difficulty(c.Command):
@@ -122,7 +158,15 @@ class Select(c.Command):
         return f"Selected dungeon {dungeon.dungeon_name}"
 
     def get_help_string(self) -> str:
-        return "Select a dungeon to play in. Sets all players as unready."
+        return "Select a dungeon to play in. Sets all players as unready"
+
+
+class Start(c.Command):
+    def execute(self, user: 'u.User', args: List[str]):
+        return self.game_engine.game_manager.start_game()
+
+    def get_help_string(self) -> str:
+        return "Start the game - Requires a selected dungeon and all players to be ready"
 
 
 class Upgrade(c.Command):
