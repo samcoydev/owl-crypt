@@ -26,10 +26,10 @@ class GameStateMachine(StateMachine):
         self.manager.set_up_lobby()
 
     def on_enter_player_turn(self):
-        pass
+        self.manager.tick_all_player_actors()
 
     def on_enter_enemy_turn(self):
-        pass
+        self.manager.tick_all_enemy_actors()
 
     def on_enter_dungeon_event(self):
         self.engine.game_manager.call_dungeon_events()

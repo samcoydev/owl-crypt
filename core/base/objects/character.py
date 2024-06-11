@@ -5,6 +5,22 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     import core.base.objects.actors.player as player_actor
 
+_BASE_STATS = {
+    "level": 1,
+    "health_points": 1,
+    "spell_points": 1,
+    "rigidity_points": 1,
+    "weight_limit": 1,
+    "base_attack_damage": 1,
+    "base_magic_damage": 1,
+    "stat_points": 0,
+    "exp_gained": 0
+}
+
+
+def get_base_stats():
+    return _BASE_STATS.copy()
+
 
 @dataclass
 class Character(ABC):
@@ -37,12 +53,14 @@ class Character(ABC):
                 self.level_up()
 
     def run_command(self, command_name, args):
+        cmd = command_name.lower()
+
         # Check if the command has a special effect for this character class
-        if command_name in self._special_effects:
-            special_effect = self._special_effects[command_name]
-            special_effect(command_name, args)
+        if cmd in self._special_effects:
+            special_effect = self._special_effects[cmd]
+            special_effect(cmd, args)
         else:
-            command = self.current_player_actor.game_engine.command_registry[command_name.lower()]
+            command = self.current_player_actor.game_engine.command_registry[cmd.lower()]
             command.execute(self, args)
 
     def load_saved_data(self, data: dict):

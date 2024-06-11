@@ -1,4 +1,4 @@
-from core.base.objects.character import Character
+from core.base.objects.character import Character, get_base_stats
 
 
 class Paladin(Character):
@@ -8,6 +8,7 @@ class Paladin(Character):
         super().__init__(character_name, self.__class__.__name__.lower(), "block", 2)
 
         self._special_effects = {"block": self.block_special}
+        self.stats_dicts = get_base_stats()
 
     def block_special(self, command_name: str, args: list):
         if len(args) > 0:

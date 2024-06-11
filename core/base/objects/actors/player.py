@@ -18,9 +18,8 @@ class PlayerActor(Actor):
     Would not recommend modifying at this time.
     """
 
-    def __init__(self, game_engine: 'e.Engine', user: 'User', character: 'Character', health: int, damage: int,
-                 current_room: 'RoomBase') -> None:
-        super().__init__(game_engine, health, damage, current_room)
+    def __init__(self, game_engine: 'e.Engine', user: 'User', character: 'Character', current_room: 'RoomBase') -> None:
+        super().__init__(game_engine, current_room, character.stats_dicts["level"])
         self.user = user
         self.character = character
 
