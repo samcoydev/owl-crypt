@@ -6,19 +6,24 @@ from core.base.objects.command import Command
 from core.stock.commands.vanilla_game_commands import Attack, Block, Cast, Help, Inspect, Inventory, Sneak, SpellBook, \
     Use
 from core.stock.commands.vanilla_lobby_commands import Characters, Dungeons, Difficulty, Lobby, Pick, Ready, Select, \
-    Upgrade
+    Start, Upgrade
+from core.stock.dungeons.the_crypt import the_crypt
 from core.stock.characters import paladin
+from core.stock.status_effects import bleed, fire
+from engine.dungeon_registry import register_dungeon
+from engine.status_registry import status_registry
 
 
 def load_mod(engine):
     register_commands(engine)
     register_character_classes()
     register_dungeons()
+    register_status_effects()
 
 
 def register_commands(engine):
     commands: List[Type['Command']] = [Attack, Block, Cast, Help, Inspect, Inventory, Sneak, SpellBook, Use, Characters,
-                                       Dungeons, Difficulty, Lobby, Pick, Ready, Select, Upgrade]
+                                       Dungeons, Difficulty, Lobby, Pick, Ready, Select, Start, Upgrade]
     for command in commands:
         register_command()(command(engine))
 
@@ -30,4 +35,12 @@ def register_character_classes():
 
 
 def register_dungeons():
-    pass
+    dungeons = [the_crypt.TheCryptDungeon]
+    for dungeon in dungeons:
+        register_dungeon(dungeon())
+
+
+def register_status_effects():
+    status_effects = [bleed, fire]
+    for status_effect in status_effects:
+        status_registry[status_effect.__name__] = status_effect

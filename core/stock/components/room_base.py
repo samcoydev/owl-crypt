@@ -11,7 +11,7 @@ from core.base.objects import artifact
 class RoomBase(ABC):
     """A reusable class to create dungeon rooms"""
 
-    def __init__(self, room_name: str, room_coordinates: Tuple[int, int], dungeon: 'dungeon_base.DungeonBase') -> None:
+    def __init__(self, room_name: str, room_coordinates: Tuple[int, int]) -> None:
         """Initialize the room.
         :param room_name: The rooms name
         """
@@ -20,7 +20,7 @@ class RoomBase(ABC):
         self.enemies: List['enemy.EnemyActor'] = []
         self.artifacts: List['artifact.Artifact'] = []
         self.doorways: Dict[str, 'doorway_base.DoorwayBase'] = {}
-        self.dungeon = dungeon
+        self.dungeon = None
         self.init_doorways()
 
     @abstractmethod

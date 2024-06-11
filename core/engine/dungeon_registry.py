@@ -8,13 +8,10 @@ def clear_registry():
     dungeon_registry.clear()
 
 
-def register_dungeon(dungeon_name: str):
-    def decorator(cls: 'dungeon.DungeonBase'):
-        if dungeon_name in dungeon_registry:
-            raise ValueError(f"Dungeon with name '{dungeon_name}' already exists")
+def register_dungeon(_dungeon: 'dungeon.DungeonBase'):
+    name = "".join(_dungeon.dungeon_name).replace(" ", "_").lower().strip("_")
 
-        dungeon_registry[dungeon_name] = cls
+    if name in dungeon_registry:
+        raise ValueError(f"Dungeon with name '{name}' already exists")
 
-        return cls
-
-    return decorator
+    dungeon_registry[name] = _dungeon

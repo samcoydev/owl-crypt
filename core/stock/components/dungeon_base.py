@@ -20,5 +20,9 @@ class DungeonBase(ABC):
     def call_dungeon_events(self):
         pass
 
+    def get_starting_room(self) -> 'rb.RoomBase':
+        return self.rooms[(0, 0)]
+
     def add_room(self, room: 'rb.RoomBase'):
         self.rooms[room.room_coordinates] = room
+        room.dungeon = self
