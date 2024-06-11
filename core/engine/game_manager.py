@@ -28,10 +28,33 @@ class GameManager:
 
         self.enemy_turn_order = []
         self.current_enemy_turn_index = 0
+        self.can_start_game = False
+        self.game_in_session = False
 
     def start_game(self):
+        if not self.can_start_game:
+            return
         self.game_engine.game_state_machine.cycle()
+        self._dungeon.setup_dungeon()
+        self.init_player_actors()
         self.format_player_turn_order()
+        self.game_in_session = True
+
+        self.broadcast_message(f"Turn order:\n{self.get_turn_order_string()}\n\n\n")
+        self.broadcast_message(f"---=== {self.game_engine.game_manager.get_dungeon_name()} ===---\n")
+        self.broadcast_message(self._dungeon.get_starting_room().view_room())
+
+    def get_turn_order_string(self):
+        result = ""
+        for index, username in enumerate(self.player_turn_order):
+            result += f"{index + 1}. {self.player_actors[username].character.character_name}\n"
+        return result
+
+    def init_player_actors(self):
+        for user in self.users_in_session.values():
+            self.player_actors[user.username] = player_actor.PlayerActor(self.game_engine, user, user.chosen_character,
+                                                                         self._dungeon.get_starting_room())
+            user.player_actor = self.player_actors[user.username]
 
     def format_player_turn_order(self):
         self.player_turn_order = list(self.player_actors.keys())
@@ -64,14 +87,22 @@ class GameManager:
 
         # Cycle game to lobby
         self.game_engine.game_state_machine.current_state = self.game_engine.game_state_machine.lobby_state
+        self.game_in_session = False
 
     def set_up_lobby(self):
+        self.unready_all_players()
+
+    def unready_all_players(self):
         for user in self.users_in_session:
             self.users_in_session[user].is_ready = False
 
     def set_dungeon(self, dungeon: 'dungeon_base.DungeonBase'):
         self._dungeon = dungeon
-        self.socketio.emit("lobby_broadcast", {"message": f"The Dungeon has been chosen: {dungeon.dungeon_name}"})
+        self.broadcast_message(f"The Dungeon has been chosen: {dungeon.dungeon_name}")
+        self.unready_all_players()
+
+    def get_dungeon_name(self):
+        return self._dungeon.dungeon_name
 
     def call_dungeon_events(self):
         self._dungeon.call_dungeon_events()
@@ -82,20 +113,22 @@ class GameManager:
 
     def set_user_ready(self, user: 'u.User'):
         if user.chosen_character is not None:
-            self.socketio.emit("lobby_broadcast", {"message": f"{user.chosen_character.character_name} is ready"})
+            self.broadcast_message(f"{user.chosen_character.character_name} is ready")
             user.is_ready = True
-            self.check_if_all_users_are_ready()
+            self.check_start_game_conditions()
             return "You are now ready"
         else:
             return "You must pick a character first"
 
-    def check_if_all_users_are_ready(self):
+    def check_start_game_conditions(self):
+        if self._dungeon is None:
+            return
         all_are_ready = True
         for user in self.users_in_session:
             if not self.users_in_session[user].is_ready:
                 all_are_ready = False
         if all_are_ready:
-            self.start_game()
+            self.can_start_game = True
 
     def get_user_by_sid(self, socket_id: str) -> u.User:
         return self.users_in_session.get(socket_id)
@@ -112,17 +145,31 @@ class GameManager:
         print(f"{enemy.enemy_type.display_name} has been slain!")
         self.enemy_actors.pop(enemy_id)
 
-    def add_user_to_session(self, socket_id: str, username: str):
-        self.users_in_session.update({socket_id: u.User(username, socket_id)})
-        print(f"{username} has joined the game. The current user list is: {self.users_in_session}")
+    def add_user_to_session(self, socket_id: str, user: 'u.User'):
+        print(user)
+        user.socket_id = socket_id
+        self.users_in_session.update({socket_id: user})
+        print(f"{user.username} has joined the game. The current user list is: {self.users_in_session}")
 
     def remove_user_from_session(self, socket_id: str):
-        user: u.User = self.users_in_session.get(socket_id)
-        user.save_user()
+        if socket_id in self.users_in_session:
+            user: u.User = self.users_in_session[socket_id]
+            user.save_user()
 
-        self.users_in_session.pop(socket_id)
-        print(f"{user.username} has left the game. The current user list is: {self.users_in_session}")
+            self.users_in_session.pop(socket_id)
+            self.broadcast_message(f"{user.username} has left the game")
+
+    def tick_all_player_actors(self):
+        for player in self.player_actors:
+            self.player_actors[player].tick()
+
+    def tick_all_enemy_actors(self):
+        for enemy in self.enemy_actors:
+            self.enemy_actors[enemy].tick()
 
     def message_player(self, username, message):
         user = self.player_actors[username].user
-        emit("message", {'message': message}, to=user.socket_id)
+        emit("message", {'msg': message}, to=user.socket_id)
+
+    def broadcast_message(self, message):
+        self.socketio.emit("message", {'msg': message})

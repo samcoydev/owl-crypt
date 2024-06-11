@@ -1,2 +1,2 @@
 from .the_crypt import TheCryptDungeon
-import rooms
+from .rooms import MainTomb, StarterRoom
