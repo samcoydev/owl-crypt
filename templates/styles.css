@@ -1,0 +1,87 @@
+@media (min-width: 768px) {
+    * {
+        font-size: 16px;
+        font-family: monospace;
+    }
+}
+
+@media (max-width: 767px) {
+    * {
+        font-size: 16px;
+        font-family: monospace;
+    }
+}
+
+.backdrop {
+    background-color: #000003;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.header {
+    color: #4CAF50;
+    width: 100%;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+.terminal {
+    width: 90%;
+    height: 70%;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    display: flex;
+    border: 2px solid #4CAF50;
+    flex-direction: column;
+}
+
+#output {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+#command-input {
+    align-self: center;
+}
+
+.input-box-carat {
+    color: whitesmoke;
+    font-weight: 300;
+    align-self: center;
+    margin-right: 5px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.input-box {
+    display: flex;
+    align-items: flex-end;
+    padding-top: 8px;
+    margin-top: 10px;
+    border-top: 1px solid #4CAF50;
+}
+
+.input-box input {
+    flex-grow: 1;
+    background-color: transparent;
+    color: white;
+    border: none;
+    outline: none;
+}
+
+.input-box button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Owl Crypt</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <style>
+        * {
+            font-size: 16px;
+            font-family: monospace;
+        }
+
+        body {
+            background-color: #000003;
+        }
+
+        .header {
+            color: #4CAF50;
+            width: 100%;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .terminal {
+            width: 90%;
+            height: 70%;
+            background-color: black;
+            color: white;
+            padding: 10px;
+            display: flex;
+            border: 2px solid #4CAF50;
+            flex-direction: column;
+        }
+
+        #output {
+            flex-grow: 1;
+            overflow-y: auto;
+            white-space: pre-line;
+            color: #8de791;
+        }
+
+        #command-input {
+            align-self: center;
+        }
+
+        #username-input {
+            align-self: center;
+        }
+
+        .input-box-carat {
+            color: whitesmoke;
+            font-weight: 300;
+            align-self: center;
+            margin-right: 5px;
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+
+        .input-box {
+            display: flex;
+            align-items: flex-end;
+            padding-top: 8px;
+            margin-top: 10px;
+            border-top: 1px solid #4CAF50;
+        }
+
+        .input-box input {
+            flex-grow: 1;
+            background-color: transparent;
+            color: white;
+            border: none;
+            outline: none;
+        }
+
+        .input-box button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="backdrop">
+    <div class="header">
+        <h2>Owl Crypt</h2>
+    </div>
+    <div id="terminal-container" class="container">
+        <div class="terminal">
+            <div id="output"></div>
+            <div class="input-box">
+                <p class="input-box-carat"> > </p>
+                <input type="text" id="command-input" placeholder="Enter a command">
+                <button id="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+    <div id="join-game" class="container">
+        <div class="terminal">
+            <div id="output">
+                <p>Enter your name to join the game</p>
+            </div>
+            <div class="input-box">
+                <p class="input-box-carat"> > </p>
+                <input type="text" id="username-input" placeholder="Enter your name">
+                <button id="send-username-button">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io('http://127.0.0.1:3232'); // Replace with your server URL
+
+    const outputDiv = document.getElementById('output');
+    const commandInput = document.getElementById('command-input');
+    const usernameInput = document.getElementById('username-input');
+    const sendButton = document.getElementById('send-button');
+    const sendUsernameButton = document.getElementById('send-username-button');
+
+    const terminalDiv = document.getElementById('terminal-container');
+    const joinGameDiv = document.getElementById('join-game');
+
+    let loggedIn = false;
+
+    terminalDiv.style.display = 'none';
+
+    socket.on('connect', () => {
+        console.log('Connected to server');
+
+        sendButton.addEventListener('click', () => {
+            sendMessage();
+        });
+
+        sendUsernameButton.addEventListener('click', () => {
+            sendUsername();
+        });
+
+        commandInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        usernameInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendUsername();
+            }
+        });
+
+        function sendMessage() {
+            const command = commandInput.value;
+            console.log("Sending command: " + command)
+            console.log("socket: ", socket);
+            socket.emit('command', command);
+            commandInput.value = '';
+        }
+
+        function sendUsername() {
+            const username = usernameInput.value;
+            socket.emit('join_game', {"username": username});
+            usernameInput.value = '';
+            terminalDiv.style.display = 'flex';
+            joinGameDiv.style.display = 'none';
+            loggedIn = true;
+        }
+
+        socket.on('message', (data) => {
+            const output = document.createElement('p');
+            output.textContent = data.msg;
+            output.style.paddingBottom = '2px';
+            outputDiv.appendChild(output);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        });
+    });
+</script>
+</body>
+</html>
