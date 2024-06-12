@@ -8,6 +8,7 @@ import core.engine.engine as e
 import core.base.objects.actors.enemy as enemy_actor
 import core.base.objects.actors.player as player_actor
 import core.stock.components.dungeon_base as dungeon_base
+import engine.dungeon_registry as dungeon_registry
 
 
 class GameManager:
@@ -43,6 +44,15 @@ class GameManager:
         self.broadcast_message(f"Turn order:\n{self.get_turn_order_string()}\n\n\n")
         self.broadcast_message(f"---=== {self.game_engine.game_manager.get_dungeon_name()} ===---\n")
         self.broadcast_message(self._dungeon.get_starting_room().view_room())
+
+    def quick_start(self):
+        self.set_dungeon(dungeon_registry.dungeon_registry.get("the_crypt"))
+        for user in self.users_in_session.values():
+            user.pick_character("testchar")
+            self.set_user_ready(user)
+
+        self.start_game()
+        return ""
 
     def get_turn_order_string(self):
         result = ""

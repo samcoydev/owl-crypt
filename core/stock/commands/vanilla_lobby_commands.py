@@ -196,3 +196,10 @@ class Upgrade(c.Command):
 
     def get_help_string(self) -> str:
         return "Use a stat point to upgrade the specified stat"
+
+class QuickStart(c.Command):
+    def execute(self, user: 'u.User', args: List[str]):
+        return self.game_engine.game_manager.quick_start()
+
+    def get_help_string(self) -> str:
+        return "Start with character 'testchar' and dungeon 'the_crypt'"

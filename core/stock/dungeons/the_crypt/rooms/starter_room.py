@@ -8,7 +8,8 @@ class StarterRoom(rb.RoomBase):
     def __init__(self):
         super().__init__(room_name="The Entrance", room_coordinates=(0, 0))
 
-    def view_room(self):
+    @property
+    def inspect_string(self) -> str:
         return ("The room sits dark, with dimly lit torches lighting the archways. The room smells of wet stone and "
                 "moss. Things are moving in the dark, only to hide between the stone slabs in the wall.")
 

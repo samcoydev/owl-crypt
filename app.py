@@ -106,7 +106,6 @@ def disconnect():
 
 @socketio.on('command')
 def receive_command(command: str):
-    print("Someone sent a command")
     result = game_engine.command_interpreter.interpret(command, game_engine.game_manager.get_user_by_sid(request.sid))
     emit('message', {'msg': result}, to=request.sid)
 

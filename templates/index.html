@@ -56,8 +56,13 @@
             color: #8de791;
         }
 
+        .input-message {
+            color: #e7d28d;
+        }
+
         #command-input {
             align-self: center;
+            color: #e7d28d;
         }
 
         .input-box {
@@ -212,8 +217,7 @@
 
         function sendMessage() {
             const command = commandInput.value;
-            console.log("Sending command: " + command)
-            console.log("socket: ", socket);
+            createMessage('> ' + command, true)
             socket.emit('command', command);
             commandInput.value = '';
         }
@@ -251,13 +255,19 @@
         });
 
         socket.on('message', (data) => {
-            console.log("Recieved message: ", data);
+            createMessage(data.msg);
+        });
+
+        function createMessage(msg, isInput = false) {
             const output = document.createElement('p');
-            output.textContent = data.msg;
+            output.textContent = msg;
             output.style.paddingBottom = '2px';
             outputDiv.appendChild(output);
             outputDiv.scrollTop = outputDiv.scrollHeight;
-        });
+            if (isInput) {
+                output.classList.add('input-message');
+            }
+        }
     });
 
 </script>

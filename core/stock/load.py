@@ -1,12 +1,10 @@
-from typing import List, Type
 
 from engine.character_registry import register_character_class
 from engine.command_registry import register_command
-from core.base.objects.command import Command
 from core.stock.commands.vanilla_game_commands import Attack, Block, Cast, Help, Inspect, Inventory, Sneak, SpellBook, \
-    Use
+    Use, Interact
 from core.stock.commands.vanilla_lobby_commands import Characters, Dungeons, Difficulty, Lobby, Pick, Ready, Select, \
-    Start, Upgrade
+    Start, Upgrade, QuickStart
 from core.stock.dungeons.the_crypt import the_crypt
 from core.stock.characters import paladin
 from core.stock.status_effects import bleed, fire
@@ -22,8 +20,8 @@ def load_mod(engine):
 
 
 def register_commands(engine):
-    game_commands = [Attack, Block, Cast, Inspect, Inventory, Sneak, SpellBook, Use]
-    lobby_commands = [Characters, Dungeons, Difficulty, Lobby, Pick, Ready, Select, Start, Upgrade]
+    game_commands = [Attack, Block, Cast, Interact, Inspect, Inventory, Sneak, SpellBook, Use]
+    lobby_commands = [Characters, Dungeons, Difficulty, Lobby, Pick, Ready, Select, Start, Upgrade, QuickStart]
     global_commands = [Help]
 
     for command in game_commands:

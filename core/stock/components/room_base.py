@@ -23,10 +23,26 @@ class RoomBase(ABC):
         self.dungeon = None
         self.init_doorways()
 
-    @abstractmethod
     def view_room(self):
         """Displays a brief description of the room"""
-        raise NotImplementedError("Please implement view_room")
+        return f"-- {self.room_name} --\n\n{self.inspect_string}\n\n --- \n\n {self.get_entity_strings()} \n\n"
+
+    def get_entity_strings(self):
+        val = ""
+        for e in self.entities.keys():
+            entity = self.entities[e]
+            val += f"{entity.entity_name()} - {entity.entity_key()}\n"
+        return val
+
+    def parse_entity_dict(self) -> dict:
+        entity_dict = {}
+        for d in self.doorways:
+            entity_dict[self.doorways[d].entity_key()] = self.doorways[d]
+        return entity_dict
+
+    @property
+    def entities(self) -> dict:
+        return self.parse_entity_dict()
 
     @abstractmethod
     def init_doorways(self) -> None:
@@ -37,10 +53,12 @@ class RoomBase(ABC):
         """Add a doorway to the room"""
         self.doorways[doorway.direction.value] = doorway
 
-    def announce_player_entered_room(self, _player: 'player.PlayerActor') -> None:
+    def announce_player_entered_room(self, _player: 'player.PlayerActor'):
+        """Returns a tuple of the room inspect string, and a boolean to indicate if the players turn should end"""
         if len(self.enemies) > 0:
-            self.view_room()
             next(e for e in self.enemies if e.current_target is not None and e.is_hostile).engage_player(_player)
+
+        return (self.view_room(), True)
 
     def find_artifact_by_name(self, artifact_name: str) -> 'artifact.Artifact':
         """Find an artifact by name"""
@@ -48,4 +66,4 @@ class RoomBase(ABC):
 
     def __repr__(self) -> str:
         """Return a string representation of the room."""
-        return f"<Room name={self.room_name} enemies={self.enemies} artifacts={self.artifacts}>"
+        return f"<Room name={self.room_name} enemies={self.enemies} artifacts={self.artifacts} room_coordinates={self.room_coordinates}>"

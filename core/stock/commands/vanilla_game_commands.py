@@ -48,15 +48,26 @@ class Help(c.Command):
 
 class Inspect(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
-        print("Inspect")
+        target = args[0] if len(args) > 0 else "room"
+        return user.player_actor.inspect_entity(target)
 
     def get_help_string(self) -> str:
         return "Inspect an object"
 
 
 class Interact(c.Command):
+    def __init__(self, game_engine, command_type: str = "game", requires_args: bool = True):
+        super().__init__(game_engine, command_type, requires_args)
+
     def execute(self, user: 'u.User', args: List[str]):
-        print("Interact")
+        target = args[0]
+        response = user.player_actor.interact_with_entity(target)
+        if response is None:
+            return "That doesn't exist."
+        elif response[1]:
+            self.game_engine.game_manager.next_player_turn()
+
+        return response[0]
 
     def get_help_string(self) -> str:
         return "Interact with an object"

@@ -32,7 +32,7 @@ class GameStateMachine(StateMachine):
         self.manager.tick_all_enemy_actors()
 
     def on_enter_dungeon_event(self):
-        self.engine.game_manager.call_dungeon_events()
+        self.manager.call_dungeon_events()
 
     def before_cycle(self, event: str, source: State, target: State, message: str = ""):
         message = ". " + message if message else ""
