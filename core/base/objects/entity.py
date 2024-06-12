@@ -36,6 +36,3 @@ class Entity(ABC):
             return self.inspect_string
         else:
             return None
-
-    def __repr__(self):
-        return f"{self.entity_name}: {self.inspect_string} - is_visible: {self.is_visible} - key: {self.entity_key}"
