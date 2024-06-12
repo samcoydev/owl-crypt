@@ -65,6 +65,11 @@
             color: #e7d28d;
         }
 
+        .highlighted {
+            color: #e3a774;
+            text-decoration: underline;
+        }
+
         .input-box {
             display: flex;
             align-items: flex-end;
@@ -260,13 +265,18 @@
 
         function createMessage(msg, isInput = false) {
             const output = document.createElement('p');
-            output.textContent = msg;
+            output.innerHTML = hightlightText(msg);
             output.style.paddingBottom = '2px';
             outputDiv.appendChild(output);
             outputDiv.scrollTop = outputDiv.scrollHeight;
             if (isInput) {
                 output.classList.add('input-message');
             }
+        }
+
+        function hightlightText(text) {
+            // Highlight any text in between double underscores
+            return text.replace(/__(.*?)__/g, '<span class="highlighted">$1</span>');
         }
     });
 

@@ -11,10 +11,11 @@ class StarterRoom(rb.RoomBase):
     @property
     def inspect_string(self) -> str:
         return ("The room sits dark, with dimly lit torches lighting the archways. The room smells of wet stone and "
-                "moss. Things are moving in the dark, only to hide between the stone slabs in the wall.")
+                "moss. Things are moving in the dark, only to hide between the stone slabs in the wall before you can"
+                "make sense of them.")
 
     def get_first_visit_text(self) -> str:
-        return (" You notice a Door on the East side of the room. You can see a faint light coming from the other side.")
+        return ("\n\nYou notice a __Door on the East side of the room__. You can see a faint light coming from the other side.")
 
     def init_doorways(self) -> None:
         self.add_doorway(db.DoorwayBase(direction=dt.Direction.EAST,
