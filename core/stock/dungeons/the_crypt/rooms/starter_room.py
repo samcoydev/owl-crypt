@@ -13,6 +13,9 @@ class StarterRoom(rb.RoomBase):
         return ("The room sits dark, with dimly lit torches lighting the archways. The room smells of wet stone and "
                 "moss. Things are moving in the dark, only to hide between the stone slabs in the wall.")
 
+    def get_first_visit_text(self) -> str:
+        return (" You notice a Door on the East side of the room. You can see a faint light coming from the other side.")
+
     def init_doorways(self) -> None:
         self.add_doorway(db.DoorwayBase(direction=dt.Direction.EAST,
                                         inspect_string="The doorway is made up of large wooden planks, with torch "

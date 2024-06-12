@@ -21,11 +21,15 @@ class RoomBase(ABC):
         self.artifacts: List['artifact.Artifact'] = []
         self.doorways: Dict[str, 'doorway_base.DoorwayBase'] = {}
         self.dungeon = None
+        self.players_visited = {}
         self.init_doorways()
 
-    def view_room(self):
+    def view_room(self, first_visit=False) -> str:
         """Displays a brief description of the room"""
-        return f"-- {self.room_name} --\n\n{self.inspect_string}\n\n --- \n\n {self.get_entity_strings()} \n\n"
+        description = self.inspect_string
+        if first_visit:
+            description += " " + self.get_first_visit_text()
+        return f"-- {self.room_name} --\n\n{description}\n\n --- \n\n {self.get_entity_strings()} \n\n"
 
     def get_entity_strings(self):
         val = ""
@@ -49,6 +53,10 @@ class RoomBase(ABC):
         """Override this method to set up the rooms doorways"""
         raise NotImplementedError("Please implement init_doorways")
 
+    def get_first_visit_text(self) -> str:
+        """Override this method to return a string that will be displayed when a player enters the room for the first time"""
+        return ""
+
     def add_doorway(self, doorway: 'doorway_base.DoorwayBase') -> None:
         """Add a doorway to the room"""
         self.doorways[doorway.direction.value] = doorway
@@ -58,7 +66,13 @@ class RoomBase(ABC):
         if len(self.enemies) > 0:
             next(e for e in self.enemies if e.current_target is not None and e.is_hostile).engage_player(_player)
 
-        return (self.view_room(), True)
+        if not self.players_visited.get(_player.user.username):
+            msg = self.view_room(first_visit=True)
+            self.players_visited[_player.user.username] = True
+        else:
+            msg = self.view_room()
+
+        return msg, True
 
     def find_artifact_by_name(self, artifact_name: str) -> 'artifact.Artifact':
         """Find an artifact by name"""

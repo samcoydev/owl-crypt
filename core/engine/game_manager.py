@@ -38,12 +38,13 @@ class GameManager:
         self.game_engine.game_state_machine.cycle()
         self._dungeon.setup_dungeon()
         self.init_player_actors()
+        self._dungeon.init_starting_room(self.get_all_player_usernames())
         self.format_player_turn_order()
         self.game_in_session = True
 
         self.broadcast_message(f"Turn order:\n{self.get_turn_order_string()}\n\n\n")
         self.broadcast_message(f"---=== {self.game_engine.game_manager.get_dungeon_name()} ===---\n")
-        self.broadcast_message(self._dungeon.get_starting_room().view_room())
+        self.broadcast_message(self._dungeon.get_starting_room().view_room(first_visit=True))
 
     def quick_start(self):
         self.set_dungeon(dungeon_registry.dungeon_registry.get("the_crypt"))
@@ -176,6 +177,9 @@ class GameManager:
     def tick_all_enemy_actors(self):
         for enemy in self.enemy_actors:
             self.enemy_actors[enemy].tick()
+
+    def get_all_player_usernames(self):
+        return list(self.player_actors.keys())
 
     def message_player(self, username, message):
         user = self.player_actors[username].user

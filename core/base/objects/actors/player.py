@@ -27,14 +27,6 @@ class PlayerActor(Actor):
         super().set_health(hp)
         # Do a save here maybe
 
-    def view_surroundings(self) -> None:
-        """Prompt to view the players surroundings"""
-        self.current_room.view_room()
-
-    def move(self, direction: str) -> None:
-        """Prompt to move the player actor in a direction"""
-        self.current_room.move_actor(self, direction)
-
     def inspect_entity(self, entity_key: str):
         """Prompt to inspect an entity by name in the players current room"""
         if entity_key == "room":

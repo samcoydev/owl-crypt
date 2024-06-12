@@ -20,8 +20,13 @@ class DungeonBase(ABC):
     def call_dungeon_events(self):
         pass
 
+    def init_starting_room(self, player_username_list):
+        starting_room = self.rooms.get((0, 0))
+        for username in player_username_list:
+            starting_room.players_visited[username] = True
+
     def get_starting_room(self) -> 'rb.RoomBase':
-        return self.rooms[(0, 0)]
+        return self.rooms.get((0, 0))
 
     def add_room(self, room: 'rb.RoomBase'):
         self.rooms[room.room_coordinates] = room
