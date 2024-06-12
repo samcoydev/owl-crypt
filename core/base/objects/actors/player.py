@@ -38,7 +38,7 @@ class PlayerActor(Actor):
     def inspect_entity(self, entity_key: str):
         """Prompt to inspect an entity by name in the players current room"""
         if entity_key == "room":
-            return self.current_room.view_room()
+            return self.current_room.inspect_string
 
         return self.current_room.entities[entity_key].inspect(self)
 
