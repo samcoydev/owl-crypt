@@ -78,7 +78,7 @@ class RoomBase(ABC):
         else:
             msg = self.view_room()
 
-        return msg, True
+        return msg
 
     def find_artifact_by_name(self, artifact_name: str) -> 'artifact.Artifact':
         """Find an artifact by name"""

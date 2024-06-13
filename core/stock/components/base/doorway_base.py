@@ -4,7 +4,6 @@ import core.base.objects.actors.player as pa
 import stock.components.base.room_base as room_base
 from base.objects.entity import Entity
 
-
 class DoorwayBase(Entity):
     """A reusable class to create dungeon doorways"""
 
@@ -22,19 +21,30 @@ class DoorwayBase(Entity):
         if can_traverse:
             next_room = self._get_room_on_other_side(player.current_room)
             if next_room is not None:
-                player.current_room = next_room
-                room_announcement = next_room.announce_player_entered_room(player)
-                room_announcement_msg = f"** You move through the {self.direction.value.capitalize()} door.\n\n{room_announcement[0]}"
-                return (room_announcement_msg, room_announcement[1])
-            return ("You can't go that way.", False)
-        return traverse_msg
+                player.move(next_room)
+                player_moved_msg = next_room.announce_player_entered_room(player)
+                self.on_traverse(self.direction, True, player)
+                return self.get_successful_traverse_message() + "\n\n" + player_moved_msg, True
+        else:
+            self.on_traverse(self.direction, False, player)
+            return self.get_failed_traverse_message(), False
 
-    def can_traverse(self, player: 'pa.PlayerActor') -> tuple:
+    def get_successful_traverse_message(self, player=None) -> str:
+        return f"You move through the {self.direction.value.capitalize()} door."
+
+    def get_failed_traverse_message(self, player=None) -> str:
+        return f"The door wouldn't budge."
+
+    def on_traverse(self, direction, successful, player):
+        """Override this method to add custom logic when a player traverses the doorway"""
+        pass
+
+    def can_traverse(self, player):
         """
         Override this method to add custom logic to determine if the player can traverse the doorway. You can also add
         flavor text for why the player can't traverse the doorway. By default, the player can traverse the doorway.
         """
-        return ("You move through the door.", True)
+        return True
 
     def _get_room_on_other_side(self, current_room: 'room_base.RoomBase') -> 'room_base.RoomBase':
         """Get the room on the other side of the doorway"""
@@ -65,7 +75,7 @@ class DoorwayBase(Entity):
     def entity_key(self):
         return "door_" + self.direction.value.lower()
 
-    def interact(self, actor):
-        msg = self.traverse(actor)
-        return msg
+    def interact(self, actor=None):
+        # Should end the turn if successful
+        return self._traverse(actor)
 

@@ -44,7 +44,7 @@ class PlayerActor(Actor):
         """
         entity = self.current_room.entities[entity_key]
         if entity is None:
-            return ("That doesn't exist.", False)
+            return "That doesn't exist.", False
 
         return entity.interact(self)
 
@@ -72,6 +72,10 @@ class PlayerActor(Actor):
     def inspect_artifact(self, artifact_name: str) -> None:
         """Prompt to inspect an artifact by name in the players current room"""
         self.current_room.find_artifact_by_name(artifact_name).inspect(self)
+
+    def move(self, room) -> None:
+        """Move the player to a new room"""
+        self.current_room = room
 
     def kill_entity(self) -> None:
         self.game_engine.game_manager.remove_player_actor(self.user.username)
