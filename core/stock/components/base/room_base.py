@@ -62,8 +62,13 @@ class RoomBase(ABC):
         """Add a doorway to the room"""
         self.doorways[doorway.direction.value] = doorway
 
-    def announce_player_entered_room(self, _player: 'player.PlayerActor'):
-        """Returns a tuple of the room inspect string, and a boolean to indicate if the players turn should end"""
+    def announce_player_entered_room(self, _player):
+        """
+        Announce that a player has entered the room
+
+        :param _player: The player that entered the room
+        :return str: The message to display
+        """
         if len(self.enemies) > 0:
             next(e for e in self.enemies if e.current_target is not None and e.is_hostile).engage_player(_player)
 

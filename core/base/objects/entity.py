@@ -26,8 +26,12 @@ class Entity(ABC):
         raise NotImplementedError("Please implement is_visible")
 
     @abstractmethod
-    def interact(self, actor=None):
-        """Interact with the object"""
+    def interact(self, actor=None) -> tuple:
+        """
+        Interact with the object
+
+        :returns tuple: (message, should_end_turn)
+        """
         raise NotImplementedError("Please implement interact")
 
     def inspect(self, actor=None):

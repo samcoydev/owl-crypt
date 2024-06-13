@@ -7,11 +7,11 @@ class Artifact(Entity):
     def __init__(self, artifact_name: str) -> None:
         self.artifact_name = artifact_name
 
-    def interact(self, player: 'player_actor.PlayerActor'):
+    def interact(self, actor=None):
         """Override this method to create an interaction with an artifact"""
         print("Interacting with commands artifact. You should create your own implementation of this method.")
 
-    def inspect(self, player: 'player_actor.PlayerActor'):
+    def inspect(self, actor=None):
         """Override this method to create flavor text for inspecting an artifact"""
         print("Inspecting commands artifact. You should create your own implementation of this method.")
 

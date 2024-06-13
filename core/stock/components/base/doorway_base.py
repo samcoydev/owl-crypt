@@ -12,10 +12,14 @@ class DoorwayBase(Entity):
         super().__init__(inspect_string)
         self.direction = direction
 
-    def traverse(self, player: 'pa.PlayerActor'):
-        """Traverse through the doorway"""
-        traverse_msg = self.can_traverse(player)
-        if traverse_msg[1] is True:
+    def _traverse(self, player):
+        """
+        Traverse through the doorway
+
+        :return tuple: (message, successful) the interaction
+        """
+        can_traverse = self.can_traverse(player)
+        if can_traverse:
             next_room = self._get_room_on_other_side(player.current_room)
             if next_room is not None:
                 player.current_room = next_room

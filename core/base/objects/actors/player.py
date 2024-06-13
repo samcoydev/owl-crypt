@@ -35,8 +35,13 @@ class PlayerActor(Actor):
 
         return self.current_room.entities[entity_key].inspect(self)
 
-    def interact_with_entity(self, entity_key: str):
-        """Prompt to interact with an entity by name in the players current room"""
+    def interact_with_entity(self, entity_key: str) -> tuple:
+        """
+        Prompt to interact with an entity by name in the players current room
+
+        :see: Entity.interact()
+        :return tuple: (message, should_end_turn)
+        """
         entity = self.current_room.entities[entity_key]
         if entity is None:
             return ("That doesn't exist.", False)

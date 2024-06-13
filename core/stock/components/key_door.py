@@ -8,7 +8,7 @@ class KeyDoor(DoorwayBase):
         self.required_key = required_key
         self.locked = True
 
-    def can_traverse(self, player: 'pa.PlayerActor') -> bool:
+    def can_traverse(self, player) -> bool:
         if self.locked:
             return ("The door is locked.", False)
         return ("You move through the door.", True)
