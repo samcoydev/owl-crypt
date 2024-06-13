@@ -276,7 +276,10 @@
 
         function hightlightText(text) {
             // Highlight any text in between double underscores
-            return text.replace(/__(.*?)__/g, '<span class="highlighted">$1</span>');
+            if (!text) {
+                return "<ERROR>";
+            }
+            return text?.replace(/__(.*?)__/g, '<span class="highlighted">$1</span>');
         }
     });
 
