@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from core.base.objects.actor import Actor
 
 if TYPE_CHECKING:
-    from core.stock.components.room_base import RoomBase
+    from stock.components.base.room_base import RoomBase
     from core.base.objects.character import Character
     from core.base.objects.user import User
     from core.engine import engine as e
@@ -22,6 +22,7 @@ class PlayerActor(Actor):
         super().__init__(game_engine, current_room, character.stats_dicts["level"])
         self.user = user
         self.character = character
+        self.inventory = {}
 
     def set_health(self, hp: int):
         super().set_health(hp)
@@ -41,6 +42,23 @@ class PlayerActor(Actor):
             return ("That doesn't exist.", False)
 
         return entity.interact(self)
+
+    def add_to_inventory(self, item_key: str, item):
+        """Add an item to the players inventory"""
+        self.inventory[item_key] = item
+        return f"* You picked up __{item.name}__"
+
+    def get_inventory_string(self):
+        """Get the players inventory"""
+        return "--== Inventory ==--\n" + '\n'.join([item.name for item in self.inventory.values()])
+
+    def use_item(self, item_key: str, args: list):
+        """Use an item from the players inventory"""
+        print(f"Using item {item_key} with args {args}")
+        if item_key not in self.inventory:
+            return "You don't have that item."
+
+        return self.inventory[item_key].use(self, args)
 
     def interact_with_artifact(self, artifact_name: str) -> None:
         """Prompt to interact with an artifact by name in the players current room"""

@@ -75,7 +75,7 @@ class Interact(c.Command):
 
 class Inventory(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
-        print("Inventory")
+        return user.player_actor.get_inventory_string()
 
     def get_help_string(self) -> str:
         return "View your inventory"
@@ -99,7 +99,8 @@ class SpellBook(c.Command):
 
 class Use(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
-        print("Use")
+        item_key = args[0]
+        return user.player_actor.use_item(item_key, args[1:])
 
     def get_help_string(self) -> str:
         return "Use an item from your inventory by name"
