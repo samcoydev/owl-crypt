@@ -9,10 +9,10 @@ class ItemArtifact(Artifact):
         self.item = item
         self._entity_key = entity_key
 
-    def interact(self, player):
-        return (player.add_to_inventory(self.item.key, self.item), True)
+    def interact(self, actor=None):
+        return actor.add_to_inventory(self.item.key, self.item), True
 
-    def inspect(self, player):
+    def inspect(self, actor=None):
         return self.item.description
 
     @property
