@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-import core.stock.components.room_base as rb
+import stock.components.base.room_base as rb
 
 
 class DungeonBase(ABC):

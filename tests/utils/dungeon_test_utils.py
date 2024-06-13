@@ -1,6 +1,6 @@
-import core.stock.components.dungeon_base as dungeon_base
-import core.stock.components.room_base as room_base
-import core.stock.components.doorway_base as doorway_base
+import stock.components.base.dungeon_base as dungeon_base
+import stock.components.base.room_base as room_base
+import stock.components.base.doorway_base as doorway_base
 import core.base.types.direction_type as direction_type
 from base.types.enemy_type import EnemyType
 

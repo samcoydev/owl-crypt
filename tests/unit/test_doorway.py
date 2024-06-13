@@ -1,6 +1,6 @@
 import unittest
 from core.base.types.direction_type import Direction
-from core.stock.components.doorway_base import DoorwayBase
+from stock.components.base.doorway_base import DoorwayBase
 from tests.utils.dungeon_test_utils import DungeonTestUtils
 
 

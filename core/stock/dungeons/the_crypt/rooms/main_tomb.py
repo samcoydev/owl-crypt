@@ -1,5 +1,5 @@
-import core.stock.components.room_base as rb
-import core.stock.components.doorway_base as db
+import stock.components.base.room_base as rb
+import stock.components.base.doorway_base as db
 import core.base.types.direction_type as dt
 
 

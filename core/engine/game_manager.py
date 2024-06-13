@@ -7,7 +7,7 @@ import core.engine.engine as e
 
 import core.base.objects.actors.enemy as enemy_actor
 import core.base.objects.actors.player as player_actor
-import core.stock.components.dungeon_base as dungeon_base
+import stock.components.base.dungeon_base as dungeon_base
 import engine.dungeon_registry as dungeon_registry
 
 

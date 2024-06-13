@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple
 
-import core.stock.components.doorway_base as doorway_base
-import core.stock.components.dungeon_base as dungeon_base
+import stock.components.base.doorway_base as doorway_base
 from core.base.objects.actors import enemy
 from core.base.objects.actors import player
 from core.base.objects import artifact
@@ -35,13 +34,15 @@ class RoomBase(ABC):
         val = ""
         for e in self.entities.keys():
             entity = self.entities[e]
-            val += f"{entity.entity_name()} - {entity.entity_key()}\n"
+            val += f"{entity.entity_name} - {entity.entity_key}\n"
         return val
 
     def parse_entity_dict(self) -> dict:
         entity_dict = {}
         for d in self.doorways:
-            entity_dict[self.doorways[d].entity_key()] = self.doorways[d]
+            entity_dict[self.doorways[d].entity_key] = self.doorways[d]
+        for a in self.artifacts:
+            entity_dict[a.entity_key] = a
         return entity_dict
 
     @property
