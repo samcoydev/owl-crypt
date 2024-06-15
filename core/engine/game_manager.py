@@ -181,9 +181,19 @@ class GameManager:
     def get_all_player_usernames(self):
         return list(self.player_actors.keys())
 
+    def broadcast_to_room(self, message, room, sender_to_exclude=None):
+        for player in self.player_actors:
+            if self.player_actors[player].current_room == room and player != sender_to_exclude:
+                self.message_player(player, message)
+
     def message_player(self, username, message):
         user = self.player_actors[username].user
         emit("message", {'msg': message}, to=user.socket_id)
 
     def broadcast_message(self, message):
-        self.socketio.emit("message", {'msg': message})
+        emit("message", {'msg': message})
+
+    def get_player_in_room_by_username(self, room, username):
+        for player in self.player_actors:
+            if self.player_actors[player].current_room == room and player == username:
+                return self.player_actors[player]
