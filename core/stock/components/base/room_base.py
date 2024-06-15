@@ -55,12 +55,18 @@ class RoomBase(ABC):
         raise NotImplementedError("Please implement init_doorways")
 
     def get_first_visit_text(self) -> str:
-        """Override this method to return a string that will be displayed when a player enters the room for the first time"""
+        """
+        Override this method to return a string that will be displayed when a player enters the room for the first time
+        """
         return ""
 
     def add_doorway(self, doorway: 'doorway_base.DoorwayBase') -> None:
         """Add a doorway to the room"""
         self.doorways[doorway.direction.value] = doorway
+
+    def remove_artifact(self, artifact_to_remove) -> None:
+        """Remove an artifact from the room"""
+        self.artifacts.remove(artifact_to_remove)
 
     def announce_player_entered_room(self, _player):
         """
