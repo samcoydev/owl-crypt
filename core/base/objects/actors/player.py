@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from base.objects.actors.inventory import Inventory
 from core.base.objects.actor import Actor
+from stock.items.item_artifact import ItemArtifact
 
 if TYPE_CHECKING:
     from stock.components.base.room_base import RoomBase
@@ -23,7 +23,8 @@ class PlayerActor(Actor):
         super().__init__(game_engine, current_room, character.stats_dicts["level"])
         self.user = user
         self.character = character
-        self.inventory = Inventory()
+        self.inventory = {}
+        self.max_inventory_size = 5
 
     def set_health(self, hp: int):
         super().set_health(hp)
@@ -43,7 +44,7 @@ class PlayerActor(Actor):
         :see: Entity.interact()
         :return tuple: (message, should_end_turn)
         """
-        entity = self.current_room.entities[entity_key]
+        entity = self.current_room.entities.get(entity_key)
         if entity is None:
             return "That doesn't exist.", False
 
@@ -55,3 +56,57 @@ class PlayerActor(Actor):
 
     def kill_entity(self) -> None:
         self.game_engine.game_manager.remove_player_actor(self.user.username)
+
+    def add_to_inventory(self, item_key: str, item):
+        """Add an item to the players inventory"""
+        if len(self.inventory) >= self.max_inventory_size:
+            return "Your inventory is full.", False
+        self.inventory[item_key] = item
+        return f"* You picked up __{item.name}__", True
+
+    def remove_from_inventory(self, item_key: str):
+        """Remove an item from the players inventory"""
+        if item_key in self.inventory:
+            del self.inventory[item_key]
+        else:
+            return "You don't have that item.", False
+        return f"* You dropped __{item_key}__", True
+
+    def drop_item(self, item_key: str):
+        item = self.inventory.get(item_key)
+        msg, was_successful = self.remove_from_inventory(item_key)
+        if was_successful:
+            item_artifact = ItemArtifact(item, item_key, True)
+            self.current_room.artifacts.append(item_artifact)
+            drop_msg = f"* {self.character.character_name} dropped {item_key}"
+            self.game_engine.game_manager.broadcast_to_room(drop_msg, self.current_room, self)
+        return msg
+
+    def give_item(self, item_key: str, target_player_name):
+        """Give an item to another player"""
+        if item_key not in self.inventory:
+            return "You don't have that item."
+
+        # TODO: FIX THIS!!!
+        target_player = self.game_engine.game_manager.get_player_in_room_by_username(self.current_room, target_player_name)
+        item = self.inventory[item_key]
+        msg, was_successful = target_player.add_to_inventory(item_key, item)
+        if was_successful:
+            self.remove_from_inventory(item_key)
+            return f"* You gave {target_player.character.character_name} {item.name}"
+        return f"* You couldn't give {target_player.character.character_name} {item.name}"
+
+    def get_inventory_string(self):
+        """Get the players inventory"""
+        return f"--== Inventory {self.get_remaining_space_string()} ==--\n" + '\n'.join(
+            [item.name for item in self.inventory.values()])
+
+    def get_remaining_space_string(self):
+        return f"({len(self.inventory)}/{self.max_inventory_size})"
+
+    def use_item(self, item_key: str, args: list):
+        """Use an item from the players inventory"""
+        if item_key not in self.inventory:
+            return "You don't have that item."
+
+        return self.inventory[item_key].use(self, args)
