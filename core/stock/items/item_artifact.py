@@ -11,7 +11,7 @@ class ItemArtifact(Artifact):
         self.remove_on_pickup = remove_on_pickup
 
     def interact(self, actor=None):
-        msg, was_successful = actor.inventory.add_to_inventory(self.item.key, self.item)
+        msg, was_successful = actor.add_to_inventory(self.item.key, self.item)
         if was_successful and self.remove_on_pickup:
             actor.current_room.remove_artifact(self)
         return msg, was_successful

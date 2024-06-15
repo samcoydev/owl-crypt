@@ -34,6 +34,25 @@ class Cast(c.Command):
         return "Cast a spell from your spellbook by name"
 
 
+class Drop(c.Command):
+    def execute(self, user: 'u.User', args: List[str]):
+        item_key = args[0]
+        return user.player_actor.drop_item(item_key)
+
+    def get_help_string(self) -> str:
+        return "Drop an item from your inventory by name"
+
+
+class Give(c.Command):
+    def execute(self, user: 'u.User', args: List[str]):
+        item_key = args[0]
+        target_player = args[1]
+        return user.player_actor.give_item(item_key, target_player)
+
+    def get_help_string(self) -> str:
+        return "Give an item from your inventory by name to a player by name"
+
+
 class Help(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
         help_string = "".join(
@@ -100,7 +119,7 @@ class SpellBook(c.Command):
 class Use(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
         item_key = args[0]
-        return user.player_actor.inventory.use_item(item_key, args[1:])
+        return user.player_actor.use_item(item_key, args[1:])
 
     def get_help_string(self) -> str:
         return "Use an item from your inventory by name"
