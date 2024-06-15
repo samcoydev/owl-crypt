@@ -1,13 +1,11 @@
 from typing import List
 
-from flask_login import UserMixin
-
 from engine.data_persistence import load_data, save_data
 from engine.character_registry import class_registry
 import core.base.objects.character as char
 
 
-class User(UserMixin):
+class User:
     def __init__(self, username, pin, socket_id="sid123", is_ready=False):
         self.username = username
         self.pin = pin
