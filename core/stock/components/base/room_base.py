@@ -86,10 +86,6 @@ class RoomBase(ABC):
 
         return msg
 
-    def find_artifact_by_name(self, artifact_name: str) -> 'artifact.Artifact':
-        """Find an artifact by name"""
-        return next(a for a in self.artifacts if a.artifact_name == artifact_name)
-
     def __repr__(self) -> str:
         """Return a string representation of the room."""
         return f"<Room name={self.room_name} enemies={self.enemies} artifacts={self.artifacts} room_coordinates={self.room_coordinates}>"
