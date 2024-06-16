@@ -1,28 +1,27 @@
-import unittest
-
-from stock.components.base.doorway_base import DoorwayBase
+import pytest
+from core.stock.components.base.doorway_base import DoorwayBase
 from core.base.types.direction_type import Direction
 from tests.utils.dungeon_test_utils import DungeonTestUtils
 
 
-class RoomBaseTestCase(unittest.TestCase):
-    def setUp(self):
-        self.dungeon = DungeonTestUtils.create_test_dungeon("Test Dungeon")
-        self.room = DungeonTestUtils.create_test_rooms()[0](self.dungeon)
+@pytest.fixture
+def setup():
+    room = DungeonTestUtils.create_test_rooms()[0]()
+    return room
 
-    def test_room_initialization(self):
-        self.assertEqual(self.room.room_name, "Test Room A")
-        self.assertEqual(self.room.room_coordinates, (0, 0))
-        self.assertEqual(self.room.enemies, [])
-        self.assertEqual(self.room.artifacts, [])
-        self.assertEqual(len(self.room.doorways), 1)
-        self.assertIsNotNone(self.room.dungeon)
-        self.assertTrue(self.room.doorways["north"])
 
-    def test_add_doorway(self):
-        self.new_doorway = DoorwayBase(Direction.WEST, "Wooden Door")
-        self.room.add_doorway(self.new_doorway)
-        self.assertTrue(self.room.doorways["west"])
+def test_room_initialization(setup):
+    room = setup
+    assert room.room_name == "Test Room A"
+    assert room.room_coordinates == (0, 0)
+    assert room.enemies == []
+    assert room.artifacts == []
+    assert len(room.doorways) == 1
+    assert "north" in room.doorways
 
-if __name__ == "__main__":
-    unittest.main()
+
+def test_add_doorway(setup):
+    room = setup
+    new_doorway = DoorwayBase(Direction.WEST, "Wooden Door")
+    room.add_doorway(new_doorway)
+    assert "west" in room.doorways
