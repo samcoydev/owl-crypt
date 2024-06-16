@@ -8,12 +8,12 @@ import core.engine.dungeon_registry as dungeon_registry
 
 class Engine:
 
-    def __init__(self, socketio):
+    def __init__(self):
         dungeon_registry.clear_registry()
         character_registry.clear_registry()
         command_registry.clear_registry()
 
-        self.game_manager = gm.GameManager(self, socketio)
+        self.game_manager = gm.GameManager(self)
         self.game_state_machine = gsm.GameStateMachine(self)
         self.command_interpreter = ci.CommandInterpreter(self)
 

@@ -14,9 +14,8 @@ import core.engine.dungeon_registry as dungeon_registry
 class GameManager:
     """Manager for game logic"""
 
-    def __init__(self, game_engine: 'e.Engine', socketio):
+    def __init__(self, game_engine: 'e.Engine'):
         self.game_engine = game_engine
-        self.socketio = socketio
         self._dungeon: 'dungeon_base.DungeonBase' or None = None
         self.users_in_session: Dict[str, 'u.User'] = {}  # socket_id - User
         self.player_actors: Dict[str, 'player_actor.PlayerActor'] = {}  # username - PlayerActor
