@@ -5,7 +5,8 @@ def create_and_ready_users(count, game_manager):
     users = []
     for i in range(count):
         user = create_test_user_and_add_to_game(f"test_user_{i}", game_manager)
-        ready_user(user, game_manager)
+        name = f"test_char_test_user_{i}"
+        ready_user(user, game_manager, name)
         users.append(user)
     return users
 
@@ -18,12 +19,12 @@ def create_test_user_and_add_to_game(name, game_manager):
 
 def create_test_user(name):
     user = User(name, "1111")
-    user.create_new_character("test_char", "paladin")
+    user.create_new_character(f"test_char_{name}", "paladin")
     return user
 
 
-def ready_user(user, game_manager):
-    user.pick_character("test_char")
+def ready_user(user, game_manager, character_name):
+    user.pick_character(character_name)
     game_manager.set_user_ready(user)
 
 
