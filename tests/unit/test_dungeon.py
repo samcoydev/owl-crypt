@@ -1,40 +1,39 @@
-import unittest
-import stock.components.base.room_base as room_base
-from stock.components.base.doorway_base import DoorwayBase
+import pytest
+import core.stock.components.base.room_base as room_base
+from core.stock.components.base.doorway_base import DoorwayBase
 from core.base.types.direction_type import Direction
 from tests.utils.dungeon_test_utils import DungeonTestUtils
 
+@pytest.fixture
+def setup():
+    dungeon = DungeonTestUtils.create_test_dungeon("Test Dungeon")
+    dungeon.setup_dungeon()
+    return dungeon
 
-class TestDungeon(unittest.TestCase):
+def test_add_room(setup):
+    dungeon = setup
 
-    def setUp(self) -> None:
-        self.dungeon = DungeonTestUtils.create_test_dungeon("Test Dungeon")
-        self.dungeon.setup_dungeon()
+    # Create a new room
+    class TestRoom(room_base.RoomBase):
+        def __init__(self):
+            super().__init__(room_name="Test Room", room_coordinates=(1, 1))
 
-    def test_add_room(self):
-        dungeon_ref = self.dungeon
+        def init_doorways(self) -> None:
+            self.add_doorway(DoorwayBase(Direction.WEST, "Wooden Door"))
 
-        # Create a new room
-        class TestRoom(room_base.RoomBase):
-            def __init__(self):
-                super().__init__(room_name="Test Room", room_coordinates=(1, 1), dungeon=dungeon_ref)
+        def view_room(self):
+            return "This is test room"
 
-            def init_doorways(self) -> None:
-                self.add_doorway(DoorwayBase(Direction.WEST, "Wooden Door"))
+    new_room = TestRoom()
 
-            def view_room(self):
-                return "This is test room"
+    assert len(dungeon.rooms) == 2
 
-        self.new_room = TestRoom()
+    # Add a new doorway to (0, 1) - This room is created by the dungeon util function
+    dungeon.rooms[(0, 1)].add_doorway(DoorwayBase(Direction.EAST, "Wooden Door"))
+    dungeon.add_room(new_room)
 
-        self.assertEqual(len(self.dungeon.rooms), 2)
+    # Now the dungeon should look like this:
+    #   []-[] <-- New room at (1, 1)
+    #   [] <-- Starting room at (0, 0)
 
-        # Add a new doorway to (0, 1) - This room is created by the dungeon util function
-        self.dungeon.rooms[(0, 1)].add_doorway(DoorwayBase(Direction.EAST, "Wooden Door"))
-        self.dungeon.add_room(self.new_room)
-
-        # Now the dungeon should look like this:
-        #   []-[] <-- New room at (1, 1)
-        #   [] <-- Starting room at (0, 0)
-
-        self.assertEqual(len(self.dungeon.rooms), 3)
+    assert len(dungeon.rooms) == 3
