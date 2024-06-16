@@ -25,7 +25,7 @@ class DungeonTestUtils:
             def init_doorways(self) -> None:
                 self.add_doorway(doorway_base.DoorwayBase(direction_type.Direction.NORTH, "Wooden Door"))
 
-            def view_room(self):
+            def view_room(self, first_visit=False):
                 return "This is test room A"
 
         class TestRoomB(room_base.RoomBase):
