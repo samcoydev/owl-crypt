@@ -1,13 +1,11 @@
-from abc import ABC, abstractmethod
 
 
-class Item(ABC):
+class Item:
     def __init__(self, name, key, description):
         self.name = name
         self.key = key
         self.description = description
 
-    @abstractmethod
     def use(self, player_actor, args=None) -> str:
         """
         Use the item
