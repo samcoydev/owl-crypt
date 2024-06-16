@@ -1,5 +1,5 @@
-from base.objects.item import Item
-from stock.components.key_door import KeyDoor
+from core.base.objects.item import Item
+from core.stock.components.key_door import KeyDoor
 
 
 class KeyBase(Item):

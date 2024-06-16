@@ -1,4 +1,4 @@
-import stock.components.base.dungeon_base as d
+import core.stock.components.base.dungeon_base as d
 import core.stock.dungeons.the_crypt.rooms as dungeon_rooms
 
 

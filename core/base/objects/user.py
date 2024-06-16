@@ -1,7 +1,7 @@
 from typing import List
 
-from engine.data_persistence import load_data, save_data
-from engine.character_registry import class_registry
+from core.engine.data_persistence import load_data, save_data
+from core.engine.character_registry import class_registry
 import core.base.objects.character as char
 
 

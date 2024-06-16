@@ -2,7 +2,7 @@ from typing import List
 
 import core.base.objects.command as c
 import core.base.objects.user as u
-from engine.command_registry import command_registry
+from core.engine.command_registry import command_registry
 
 
 class Attack(c.Command):

@@ -1,5 +1,4 @@
-from base.objects.entity import Entity
-from core.base.objects.actors import player as player_actor
+from core.base.objects.entity import Entity
 
 
 class Artifact(Entity):

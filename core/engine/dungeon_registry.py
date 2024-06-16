@@ -1,5 +1,5 @@
 from typing import Dict
-import stock.components.base.dungeon_base as dungeon
+import core.stock.components.base.dungeon_base as dungeon
 
 dungeon_registry: Dict[str, 'dungeon.DungeonBase'] = {}
 

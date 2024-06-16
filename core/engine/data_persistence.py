@@ -1,7 +1,7 @@
 import json
 import os
 
-from engine.constants import SAVE_FILES_PATH
+from core.engine.constants import SAVE_FILES_PATH
 
 
 def save_data(file_name, data):

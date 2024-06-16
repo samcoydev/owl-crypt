@@ -1,4 +1,4 @@
-from base.objects.artifact import Artifact
+from core.base.objects.artifact import Artifact
 
 
 class ItemArtifact(Artifact):

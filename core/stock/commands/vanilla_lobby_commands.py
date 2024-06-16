@@ -3,8 +3,8 @@ from typing import List
 import core.base.objects.command as c
 
 import core.base.objects.user as u
-import engine.dungeon_registry as dungeon_registry
-from engine.character_registry import class_registry
+import core.engine.dungeon_registry as dungeon_registry
+from core.engine.character_registry import class_registry
 
 
 class Characters(c.Command):

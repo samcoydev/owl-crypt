@@ -1,9 +1,9 @@
-import engine.command_interpreter as ci
-import engine.game_manager as gm
-import engine.game_state_machine as gsm
-import engine.character_registry as character_registry
-import engine.command_registry as command_registry
-import engine.dungeon_registry as dungeon_registry
+import core.engine.command_interpreter as ci
+import core.engine.game_manager as gm
+import core.engine.game_state_machine as gsm
+import core.engine.character_registry as character_registry
+import core.engine.command_registry as command_registry
+import core.engine.dungeon_registry as dungeon_registry
 
 
 class Engine:

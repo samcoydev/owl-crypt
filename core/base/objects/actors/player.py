@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from core.base.objects.actor import Actor
-from stock.items.item_artifact import ItemArtifact
+from core.stock.items.item_artifact import ItemArtifact
 
 if TYPE_CHECKING:
-    from stock.components.base.room_base import RoomBase
+    from core.stock.components.base.room_base import RoomBase
     from core.base.objects.character import Character
     from core.base.objects.user import User
     from core.engine import engine as e

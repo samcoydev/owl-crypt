@@ -1,4 +1,4 @@
-from stock.components.base.doorway_base import DoorwayBase
+from core.stock.components.base.doorway_base import DoorwayBase
 
 
 class KeyDoor(DoorwayBase):

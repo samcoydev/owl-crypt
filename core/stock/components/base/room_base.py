@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple
 
-import stock.components.base.doorway_base as doorway_base
+import core.stock.components.base.doorway_base as doorway_base
 from core.base.objects.actors import enemy
-from core.base.objects.actors import player
 from core.base.objects import artifact
 
 

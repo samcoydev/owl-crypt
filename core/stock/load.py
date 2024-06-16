@@ -1,6 +1,6 @@
 
-from engine.character_registry import register_character_class
-from engine.command_registry import register_command
+from core.engine.character_registry import register_character_class
+from core.engine.command_registry import register_command
 from core.stock.commands.vanilla_game_commands import Attack, Block, Cast, Help, Inspect, Inventory, Sneak, SpellBook, \
     Use, Interact, Drop, Give
 from core.stock.commands.vanilla_lobby_commands import Characters, Dungeons, Difficulty, Lobby, Pick, Ready, Select, \
@@ -8,8 +8,8 @@ from core.stock.commands.vanilla_lobby_commands import Characters, Dungeons, Dif
 from core.stock.dungeons.the_crypt import the_crypt
 from core.stock.characters import paladin
 from core.stock.status_effects import bleed, fire
-from engine.dungeon_registry import register_dungeon
-from engine.status_registry import status_registry
+from core.engine.dungeon_registry import register_dungeon
+from core.engine.status_registry import status_registry
 
 
 def load_mod(engine):

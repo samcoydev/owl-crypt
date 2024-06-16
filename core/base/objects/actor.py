@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from engine.status_registry import status_registry
+
+from core.engine.status_registry import status_registry
 
 
 class Actor(ABC):

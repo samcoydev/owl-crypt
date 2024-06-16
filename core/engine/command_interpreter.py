@@ -1,5 +1,5 @@
 import core.base.objects.user as user_object
-from engine.command_registry import command_registry
+from core.engine.command_registry import command_registry
 
 
 class CommandInterpreter:

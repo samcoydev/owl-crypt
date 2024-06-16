@@ -1,8 +1,7 @@
 import core.base.types.direction_type as dr
-import stock.components.base.dungeon_base as d
-import core.base.objects.actors.player as pa
-import stock.components.base.room_base as room_base
-from base.objects.entity import Entity
+import core.stock.components.base.dungeon_base as d
+import core.stock.components.base.room_base as room_base
+from core.base.objects.entity import Entity
 
 class DoorwayBase(Entity):
     """A reusable class to create dungeon doorways"""
