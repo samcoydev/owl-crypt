@@ -77,3 +77,6 @@ class User:
 
     def __str__(self):
         return "User: " + self.username + " with PIN: " + self.pin + " and socket_id: " + self.socket_id + " is ready: " + str(self.is_ready) + " with characters: " + str(self.characters) + " and chosen character: " + str(self.chosen_character) + " and player actor: " + str(self.player_actor)
+
+    def __repr__(self):
+        return self.__str__()
