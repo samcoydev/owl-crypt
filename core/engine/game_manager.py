@@ -192,7 +192,7 @@ class GameManager:
     def broadcast_message(self, message):
         emit("message", {'msg': message})
 
-    def get_player_in_room_by_username(self, room, username):
+    def get_player_in_room_by_username(self, room, character_name):
         for player in self.player_actors:
-            if self.player_actors[player].current_room == room and player == username:
+            if self.player_actors[player].current_room == room and self.player_actors[player].character.character_name == character_name:
                 return self.player_actors[player]
