@@ -3,8 +3,7 @@ from core.base.objects.entity import Entity
 
 class Artifact(Entity):
     """A class to represent an artifact. Artifacts is a generic for objects that a player can interact with"""
-    def __init__(self, artifact_name: str, inspect_string: str) -> None:
-        super().__init__(inspect_string)
+    def __init__(self, artifact_name: str) -> None:
         self.artifact_name = artifact_name
 
     def interact(self, actor=None):

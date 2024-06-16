@@ -83,3 +83,16 @@ def test_give_item_fail(test_users):
     assert result == fail_str
     assert len(player_a.inventory) == 0
     assert len(player_b.inventory) == 0
+
+def test_drop_item_success(test_users):
+    player_a, player_b = test_users
+    item_name = "Key"
+    success_msg = f"* You dropped __test_key__"
+    current_room = player_a.current_room
+
+    helper_give_item(item_name, "test_key", player_a)
+    assert len(current_room.artifacts) == 0
+
+    msg = player_a.drop_item("test_key")
+    assert msg == success_msg
+    assert len(current_room.artifacts) == 1
