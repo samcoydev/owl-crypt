@@ -1,4 +1,4 @@
-from server import create_app, socketio
+from core.server import create_app, socketio
 
 app = create_app()
 
