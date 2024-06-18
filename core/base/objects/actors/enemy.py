@@ -5,21 +5,18 @@ from core.base.objects import actor
 from core.base.types import enemy_type as et
 
 
-@dataclass
 class EnemyActor(actor.Actor):
     """
     A class to represent an enemy actor
 
     Would not recommend modifying at this time.
     """
-
-    enemy_id: str
-    enemy_type: 'et.EnemyType'
-    is_hostile: bool = True
-
-    def __post_init__(self):
-        super().__post_init__()
-        self.set_stats(self.enemy_type.distribute_points(self.level))
+    def __init__(self, game_engine, current_room, level, enemy_id, enemy_type: 'et.EnemyType', is_hostile=True):
+        super().__init__(game_engine, current_room, level)
+        self.enemy_id = enemy_id
+        self.enemy_type = enemy_type
+        self.is_hostile = is_hostile
+        self.set_stats(self.enemy_type.distribute_points(level=self.level))
 
     def use_turn(self):
         pass
@@ -27,10 +24,10 @@ class EnemyActor(actor.Actor):
     def scale_stat_level(self, stat_value: int):
         return (stat_value * 10) * self.game_engine.game_manager.difficulty_multiplier
 
-    def engage_player(self, player: 'player_actor.PlayerActor') -> None:
+    def engage_player(self, player: 'player_actor.PlayerActor'):
         """Sets the enemy actors target to the player """
-        self.enemy_type.get_encounter_dialog()
         self.current_target = player
+        return self.enemy_type.get_encounter_dialog()
 
     def kill_entity(self) -> None:
         """Removes the enemy actor from the game. Override to add flavor text"""

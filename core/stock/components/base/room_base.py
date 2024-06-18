@@ -57,6 +57,14 @@ class RoomBase(ABC):
         """Override this method to set up the rooms doorways"""
         raise NotImplementedError("Please implement init_doorways")
 
+    def init_enemies(self) -> None:
+        """Override this method to set up the rooms enemies"""
+        pass
+
+    def add_enemy(self, enemy_id, enemy_type, is_hostile=True):
+        new_enemy = self.dungeon.game_manager.add_enemy_actor(self, enemy_id, enemy_type, is_hostile)
+        self.enemies.append(new_enemy)
+
     def get_first_visit_text(self) -> str:
         """
         Override this method to return a string that will be displayed when a player enters the room for the first time
@@ -83,7 +91,6 @@ class RoomBase(ABC):
             "enemy_event": [],
         }
         if len(self.enemies) > 0:
-            next(e for e in self.enemies if e.current_target is not None and e.is_hostile).engage_player(_player)
             first_available_enemy = next((e for e in self.enemies if e.current_target is None and e.is_hostile), None)
             if first_available_enemy:
                 enemy_msg = first_available_enemy.engage_player(_player)

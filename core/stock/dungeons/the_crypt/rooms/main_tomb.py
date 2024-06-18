@@ -1,6 +1,7 @@
 import core.stock.components.base.room_base as rb
 import core.stock.components.base.doorway_base as db
 import core.base.types.direction_type as dt
+from stock.enemies.enemy_skeleton import SkeletonEnemy
 
 
 class MainTomb(rb.RoomBase):
@@ -18,3 +19,6 @@ class MainTomb(rb.RoomBase):
     def init_doorways(self) -> None:
         self.add_doorway(db.DoorwayBase(direction=dt.Direction.WEST, inspect_string="The doorway is made up of large "
                                                                                     "wooden planks."))
+
+    def init_enemies(self) -> None:
+        self.add_enemy("skeleton", SkeletonEnemy())

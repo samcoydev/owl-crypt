@@ -149,6 +149,23 @@ class GameManager:
         print(f"Our hero {player.character.character_name} has fallen!")
         self.player_actors.pop(username)
 
+    def get_enemy_level(self):
+        # TODO - Add scaling, all that jazz
+        return 1
+
+    def add_enemy_actor(self, room, enemy_id, enemy_type, is_hostile=True):
+        new_enemy = enemy_actor.EnemyActor(
+            self.game_engine,
+            self._dungeon.get_starting_room(),
+            self.get_enemy_level(),
+            enemy_id,
+            enemy_type,
+            is_hostile
+        )
+        new_enemy.current_room = room
+        self.enemy_actors.update({enemy_id: new_enemy})
+        return new_enemy
+
     def remove_enemy_actor(self, enemy_id):
         enemy = self.enemy_actors[enemy_id]
 

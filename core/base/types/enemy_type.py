@@ -30,11 +30,9 @@ class EnemyType(ABC):
             "base_magic_damage": 20
         }
 
-    def distribute_points(self, level):
+    def distribute_points(self, level: int):
         """
         Calculates the stat distribution for an enemy of a given level and stat distribution.
-        Args:
-          level: The level of the enemy.
         Returns:
           A dictionary of stats, where the key is the name of the stat and the value is the value of the stat.
         """
