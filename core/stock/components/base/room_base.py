@@ -78,8 +78,16 @@ class RoomBase(ABC):
         :param _player: The player that entered the room
         :return str: The message to display
         """
+        messages = {
+            "view_room": [],
+            "enemy_event": [],
+        }
         if len(self.enemies) > 0:
             next(e for e in self.enemies if e.current_target is not None and e.is_hostile).engage_player(_player)
+            first_available_enemy = next((e for e in self.enemies if e.current_target is None and e.is_hostile), None)
+            if first_available_enemy:
+                enemy_msg = first_available_enemy.engage_player(_player)
+                messages["enemy_event"].append(enemy_msg)
 
         if not self.players_visited.get(_player.user.username):
             msg = self.view_room(first_visit=True)
@@ -87,6 +95,16 @@ class RoomBase(ABC):
         else:
             msg = self.view_room()
 
+        messages["view_room"].append(msg)
+
+        return self.compose_message(messages)
+
+    def compose_message(self, messages):
+        msg = ""
+        for message in messages["view_room"]:
+            msg += message
+        for message in messages["enemy_event"]:
+            msg += message + "\n"
         return msg
 
     def __repr__(self) -> str:
