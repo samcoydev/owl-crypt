@@ -35,7 +35,7 @@ class GameManager:
         if not self.can_start_game:
             return
         self.game_engine.game_state_machine.cycle()
-        self._dungeon.setup_dungeon()
+        self._dungeon.setup_dungeon(game_manager=self)
         self.init_player_actors()
         self._dungeon.init_starting_room(self.get_all_player_usernames())
         self.format_player_turn_order()

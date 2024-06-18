@@ -10,12 +10,12 @@ class DungeonBase(ABC):
     """
 
     def __init__(self, dungeon_name: str):
+        self.game_manager = None
         self.dungeon_name = dungeon_name
         self.rooms = {}
 
-    @abstractmethod
-    def setup_dungeon(self):
-        raise NotImplementedError("Please implement the dungeon setup")
+    def setup_dungeon(self, game_manager):
+        self.game_manager = game_manager
 
     def call_dungeon_events(self):
         pass
@@ -30,4 +30,4 @@ class DungeonBase(ABC):
 
     def add_room(self, room: 'rb.RoomBase'):
         self.rooms[room.room_coordinates] = room
-        room.dungeon = self
+        room.set_dungeon(self)

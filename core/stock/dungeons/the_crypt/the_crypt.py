@@ -7,6 +7,7 @@ class TheCryptDungeon(d.DungeonBase):
     def __init__(self):
         super().__init__("The Crypt")
 
-    def setup_dungeon(self):
+    def setup_dungeon(self, game_manager):
+        super().setup_dungeon(game_manager)
         self.add_room(dungeon_rooms.MainTomb())
         self.add_room(dungeon_rooms.StarterRoom())

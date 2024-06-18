@@ -22,6 +22,10 @@ class RoomBase(ABC):
         self.players_visited = {}
         self.init_doorways()
 
+    def set_dungeon(self, dungeon):
+        self.dungeon = dungeon
+        self.init_enemies()
+
     def view_room(self, first_visit=False) -> str:
         """Displays a brief description of the room"""
         description = self.inspect_string
