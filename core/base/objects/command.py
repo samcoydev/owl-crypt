@@ -20,3 +20,6 @@ class Command(ABC):
     @abstractmethod
     def get_help_string(self) -> str:
         raise NotImplementedError("Please implement a help string method")
+
+    def get_detailed_help_string(self) -> str:
+        return self.get_help_string()
