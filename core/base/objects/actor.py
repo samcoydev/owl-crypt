@@ -132,8 +132,8 @@ class Actor(ABC):
         self.weight_limit = stats_dict["weight_limit"]
         self.base_attack_damage = stats_dict["base_attack_damage"]
         self.base_magic_damage = stats_dict["base_magic_damage"]
-        self.stat_points = stats_dict["stat_points"]
-        self.exp_gained = stats_dict["exp_gained"]
+        self.stat_points = stats_dict.get("stat_points") or 0
+        self.exp_gained = stats_dict.get("exp_gained") or 0
 
     def scale_stat_level(self, stat_value: int):
         """
