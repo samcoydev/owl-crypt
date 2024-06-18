@@ -16,4 +16,4 @@ class SkeletonEnemy(EnemyType):
         return "* Bones rattle and fall to the floor *"
 
     def get_encounter_dialog(self) -> str:
-        return "* Bones crunch and rigidly contort towards you *"
+        return "* Bones crunch and contort violently. It's coming towards you *"

@@ -23,10 +23,9 @@ class StarterRoom(rb.RoomBase):
 
     def init_doorways(self) -> None:
         self.add_doorway(
-            kd.KeyDoor(
+            db.DoorwayBase(
                 dt.Direction.EAST,
                 "The doorway is made up of large wooden planks, with torch light breaking through the cracks.",
-                "rusty_key"
             )
         )
 
