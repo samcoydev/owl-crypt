@@ -1,5 +1,5 @@
 import core.stock.components.base.room_base as rb
-import core.stock.components.key_door as kd
+import core.stock.components.base.doorway_base as db
 import core.base.types.direction_type as dt
 from core.stock.items.item_artifact import ItemArtifact
 from core.stock.items.key_base import KeyBase
