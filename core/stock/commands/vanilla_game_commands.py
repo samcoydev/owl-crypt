@@ -55,6 +55,33 @@ class Give(c.Command):
 
 class Help(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
+        if len(args) > 0:
+            return self.compose_detailed_help_string(args[0])
+
+        return self.compose_help_string()
+
+    def get_tutorial_str(self) -> str:
+        return (
+            "=== Welcome to __Owl Crypt__! ===\n" +
+            "This is a text-based dungeon crawler RPG you can play with your friends, and customize to your hearts " +
+            "content. To get started, follow the steps listed below. If you need more detailed explanations for any " +
+            "of the commands, type `HELP <command>`. " + "\n\n" +
+            " 1. Create a character by typing CHARACTERS CREATE `name` `class`.\n" +
+            " 2. Pick a character by typing `PICK <name>`.\n" +
+            " 3. Select a dungeon by typing `SELECT <dungeon>`.\n" +
+            " 4. Wait until all players are ready. Mark yourself as ready with the `READY` command.\n" +
+            " 5. Start the game by typing `START`."
+        )
+
+    def compose_detailed_help_string(self, command_name) -> str:
+        if command_name.lower() == "tutorial":
+            return self.get_tutorial_str()
+        if command_name in command_registry:
+            return command_registry[command_name].get_detailed_help_string()
+        else:
+            return f"Command {command_name} not found. Type HELP to see a list of available commands."
+
+    def compose_help_string(self) -> str:
         help_string = "".join(
             [f"{command_name.upper()} - {command_registry[command_name].get_help_string()}\n" for command_name in
              command_registry])
@@ -63,6 +90,9 @@ class Help(c.Command):
 
     def get_help_string(self) -> str:
         return "Show the list of possible commands"
+
+    def get_detailed_help_string(self) -> str:
+        return "HELP - Show the list of possible commands\nHELP <command> - Show detailed help for a specific command\n"
 
 
 class Inspect(c.Command):
@@ -90,6 +120,9 @@ class Interact(c.Command):
 
     def get_help_string(self) -> str:
         return "Interact with an object"
+
+    def get_detailed_help_string(self) -> str:
+        return "INTERACT <name> - Interact with an object by name\n" \
 
 
 class Inventory(c.Command):
@@ -123,3 +156,6 @@ class Use(c.Command):
 
     def get_help_string(self) -> str:
         return "Use an item from your inventory by name"
+
+    def get_detailed_help_string(self) -> str:
+        return "USE <item_name> - Use an item from your inventory by name\n"
