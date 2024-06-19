@@ -63,6 +63,9 @@ class Character(ABC):
             command = self.current_player_actor.game_engine.command_registry[cmd.lower()]
             command.execute(self, args)
 
+    def get_command_effects(self, command_name):
+        return self._special_effects.get(command_name, None)
+
     def load_saved_data(self, data: dict):
         """Load a Character"""
         self.character_name = data["name"]
