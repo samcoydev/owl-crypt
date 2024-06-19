@@ -54,6 +54,9 @@ class GameManager:
         self.start_game()
         return ""
 
+    def is_players_turn(self, username):
+        return self.player_turn_order[self.current_player_turn_index] == username
+
     def get_turn_order_string(self):
         result = ""
         for index, username in enumerate(self.player_turn_order):

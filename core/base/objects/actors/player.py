@@ -26,6 +26,15 @@ class PlayerActor(Actor):
         self.inventory = {}
         self.max_inventory_size = 5
 
+        self.max_energy_points = 5
+        self.energy_points = 0
+        self.used_normal = False
+
+    def start_turn(self):
+        self.energy_points = self.max_energy_points
+        self.used_normal = False
+        self.signature_uses = 0
+
     def set_health(self, hp: int):
         super().set_health(hp)
         # Do a save here maybe
@@ -110,3 +119,33 @@ class PlayerActor(Actor):
             return "You don't have that item."
 
         return self.inventory[item_key].use(self, args)
+
+    def check_command_weight(self, cmd_name, args):
+        """
+        Check if the player can execute a command this turn. Refer to the command weight system page in the docs for
+        more information.
+
+        TODO: Might be nice to move this to the actor class itself for enemy AI.
+
+        :param cmd_name: The command name being executed
+        :param args: The arguments passed to the command
+        :return: None if the command can be executed, a message if the command cannot be executed
+        """
+        command_name = cmd_name.lower()
+        if self.energy_points <= 0:
+            return "You don't have enough energy points to do that."
+
+        signature_command = self.character.signature_command_name
+
+        if command_name.lower() == "use":
+            self.energy_points -= 1
+            return None
+
+        if self.signature_uses < self.character.signature_max:
+            self.signature_uses += 1
+            if command_name == signature_command:
+                self.character.get_command_effects(signature_command)(command_name, args)
+            elif not self.used_normal:
+                self.used_normal = True
+
+        self.energy_points -= 1
