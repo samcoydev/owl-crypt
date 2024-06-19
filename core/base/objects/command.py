@@ -8,14 +8,25 @@ if TYPE_CHECKING:
 
 class Command(ABC):
 
-    def __init__(self, game_engine, command_type: str = "global", requires_args: bool = False):
+    def __init__(self, game_engine, command_type: str = "global", requires_args: bool = False, should_use_weight: bool = False):
         self.game_engine: 'e.Engine' = game_engine
         self.requires_args = requires_args
         self.command_type = command_type
+        self.should_use_weight = should_use_weight
 
-    @abstractmethod
     def execute(self, user: 'u.User', args: List[str]):
-        raise NotImplementedError("Please implement the execution method")
+        if self.should_use_weight:
+            return self.check_command_weight(user, args)
+
+    def check_command_weight(self, user, args):
+        player = user.player_actor
+        if player is None:
+            return "You are not in the game."
+
+    def check_turn(self, user):
+        if not self.game_engine.game_manager.is_players_turn(user.username):
+            return "It's not your turn."
+        return None
 
     @abstractmethod
     def get_help_string(self) -> str:
