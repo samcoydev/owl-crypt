@@ -96,8 +96,8 @@ class PlayerActor(Actor):
         if item_key not in self.inventory:
             return "You don't have that item."
 
-        # TODO: FIX THIS!!!
-        target_player = self.game_engine.game_manager.get_player_in_room_by_username(self.current_room, target_player_name)
+        target_player = self.game_engine.game_manager.get_player_in_room_by_character_name(self.current_room,
+                                                                                           target_player_name)
         item = self.inventory[item_key]
         msg, was_successful = target_player.add_to_inventory(item_key, item)
         if was_successful:
