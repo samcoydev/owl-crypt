@@ -54,6 +54,8 @@ class Give(c.Command):
 
 
 class Help(c.Command):
+   # TODO: Make the help command reference the docs instead. And build in a Markdown processor to the text system.
+
     def execute(self, user: 'u.User', args: List[str]):
         if len(args) > 0:
             return self.compose_detailed_help_string(args[0])
