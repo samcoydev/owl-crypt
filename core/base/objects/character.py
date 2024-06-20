@@ -32,9 +32,11 @@ class Character(ABC):
     """
     character_name: str
     class_name: str
-    _special_effects = {}
     signature_command_name: str
     signature_max: int
+    _command_weight_overrides = {}  # command_name - energy_cost
+    signature_should_override_original_command = False
+    should_append_signature_message = False  # Should the signature message appear after the original command text?
 
     current_player_actor: 'player_actor.PlayerActor' or None = None
     stats_dicts: dict = None
@@ -52,19 +54,13 @@ class Character(ABC):
             if self.stats_dicts["exp_gained"] >= required_exp_for_next_level:
                 self.level_up()
 
-    def run_command(self, command_name, args):
-        cmd = command_name.lower()
-
-        # Check if the command has a special effect for this character class
-        if cmd in self._special_effects:
-            special_effect = self._special_effects[cmd]
-            special_effect(cmd, args)
-        else:
-            command = self.current_player_actor.game_engine.command_registry[cmd.lower()]
-            command.execute(self, args)
-
-    def get_command_effects(self, command_name):
-        return self._special_effects.get(command_name, None)
+    def signature_effect(self, args) -> tuple:
+        """
+        Override this to create signature logic
+        :param args: Command arguments
+        :return: A tuple containing the flavor text, and if the action was successful
+        """
+        return "", False
 
     def load_saved_data(self, data: dict):
         """Load a Character"""
