@@ -120,32 +120,20 @@ class PlayerActor(Actor):
 
         return self.inventory[item_key].use(self, args)
 
-    def check_command_weight(self, cmd_name, args):
-        """
-        Check if the player can execute a command this turn. Refer to the command weight system page in the docs for
-        more information.
+    def can_afford_energy_cost(self, cmd_name):
+        energy_cost = self.character.get_energy_cost(cmd_name.lower())
+        return self.energy_points > 0 and self.energy_points - energy_cost >= 0
 
-        TODO: Might be nice to move this to the actor class itself for enemy AI.
-
-        :param cmd_name: The command name being executed
-        :param args: The arguments passed to the command
-        :return: None if the command can be executed, a message if the command cannot be executed
-        """
+    def spend_energy_points(self, cmd_name):
         command_name = cmd_name.lower()
-        if self.energy_points <= 0:
-            return "You don't have enough energy points to do that."
+        energy_cost = self.character.get_energy_cost(command_name)
 
-        signature_command = self.character.signature_command_name
-
-        if command_name.lower() == "use":
-            self.energy_points -= 1
-            return None
-
-        if self.signature_uses < self.character.signature_max:
+        if self.signature_uses < self.character.signature_max and command_name.lower() is not "use":
             self.signature_uses += 1
-            if command_name == signature_command:
-                self.character.get_command_effects(signature_command)(command_name, args)
-            elif not self.used_normal:
+            if not self.used_normal:
                 self.used_normal = True
 
-        self.energy_points -= 1
+        self.energy_points -= energy_cost
+
+    def block(self) -> tuple:
+        return "Blocked!", True
