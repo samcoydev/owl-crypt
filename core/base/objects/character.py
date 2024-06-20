@@ -76,6 +76,18 @@ class Character(ABC):
             "stats": self.stats_dicts
         }
 
+    def set_energy_cost_override(self, overrides):
+        self._command_weight_overrides = overrides
+
+    def get_energy_cost(self, command_name):
+        """
+        Gets the special energy cost of a certain command if an override exists
+        :param command_name: The command name to check for
+        :return: The energy cost, or the default energy cost
+        """
+        command = self.current_player_actor.game_engine.command_registry[command_name.lower()]
+        return self._command_weight_overrides.get(command_name, command.energy_cost)
+
     def get_stats_string(self) -> str:
         """Returns a string of the characters stats"""
         stats_string = ""

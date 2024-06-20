@@ -156,6 +156,9 @@ class Use(c.Command):
         item_key = args[0]
         return user.player_actor.use_item(item_key, args[1:])
 
+    def energy_cost(self):
+        return 1
+
     def get_help_string(self) -> str:
         return "Use an item from your inventory by name"
 

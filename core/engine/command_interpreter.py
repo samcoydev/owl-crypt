@@ -33,6 +33,6 @@ class CommandInterpreter:
         if new_command.requires_args and len(args) == 0:
             return "Please provide the necessary arguments. Use HELP for more information"
 
-        return new_command.execute(user=user, args=args)
+        return new_command.call_execute(user=user, args=args)
 
 
