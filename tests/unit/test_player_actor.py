@@ -8,7 +8,7 @@ from tests.utils.user_utils import create_and_ready_users
 @pytest.fixture
 def dungeon(game_engine, mock_emit):
     dungeon = DungeonTestUtils.create_test_dungeon("Test Dungeon")
-    dungeon.setup_dungeon()
+    dungeon.setup_dungeon(game_engine.game_manager)
     game_engine.game_manager.set_dungeon(dungeon)
 
     return dungeon
@@ -18,7 +18,6 @@ def dungeon(game_engine, mock_emit):
 def test_users(dungeon, game_engine, mock_emit, persistence):
     _users = create_and_ready_users(2, game_engine.game_manager)
     game_engine.game_manager.start_game()
-    print(_users)
     player_a = _users[0].player_actor
     player_b = _users[1].player_actor
     yield player_a, player_b

@@ -4,11 +4,13 @@ from core.stock.components.base.doorway_base import DoorwayBase
 from core.base.types.direction_type import Direction
 from tests.utils.dungeon_test_utils import DungeonTestUtils
 
+
 @pytest.fixture
-def setup():
+def setup(game_engine):
     dungeon = DungeonTestUtils.create_test_dungeon("Test Dungeon")
-    dungeon.setup_dungeon()
+    dungeon.setup_dungeon(game_engine.game_manager)
     return dungeon
+
 
 def test_add_room(setup):
     dungeon = setup

@@ -9,7 +9,7 @@ class DungeonTestUtils:
     @staticmethod
     def create_test_dungeon(dungeon_name: str) -> 'dungeon_base.DungeonBase':
         class TestDungeon(dungeon_base.DungeonBase):
-            def setup_dungeon(self):
+            def setup_dungeon(self, game_manager):
                 # Define the setup logic for the test dungeon
                 self.add_room(DungeonTestUtils.create_test_rooms()[0]())
                 self.add_room(DungeonTestUtils.create_test_rooms()[1]())
