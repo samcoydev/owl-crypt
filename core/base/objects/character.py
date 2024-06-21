@@ -1,6 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from core.engine.command_registry import command_registry
 
 if TYPE_CHECKING:
     import core.base.objects.actors.player as player_actor
@@ -85,8 +86,8 @@ class Character(ABC):
         :param command_name: The command name to check for
         :return: The energy cost, or the default energy cost
         """
-        command = self.current_player_actor.game_engine.command_registry[command_name.lower()]
-        return self._command_weight_overrides.get(command_name, command.energy_cost)
+        command = command_registry[command_name.lower()]
+        return self._command_weight_overrides.get(command_name, command.energy_cost())
 
     def get_stats_string(self) -> str:
         """Returns a string of the characters stats"""
@@ -104,6 +105,6 @@ class Character(ABC):
             self.stats_dicts[stat_name] += 1
             self.stats_dicts["stat_points"] -= 1
             stat_name = stat_name.replace("_", " ").title()
-            return f"Upgraded {stat_name} to {self.stats_dicts[stat_name]}. You now have {self.stats_dicts['stat_points']} stat points remaining"
+            return f"Upgraded {stat_name} to {self.stats_dicts[stat_name]}. You now have {self.stats_dicts['stat_points']} stat points remaining", True
         else:
-            return "Could not upgrade that stat"
+            return "Could not upgrade that stat", False

@@ -1,5 +1,7 @@
 
 
+PLACEHOLDER_MESSAGE = "Please implement the use method for this item."
+
 class Item:
     def __init__(self, name, key, description):
         self.name = name
@@ -13,4 +15,4 @@ class Item:
         :param args: a list of objects
         :return: a string
         """
-        pass
+        return PLACEHOLDER_MESSAGE
