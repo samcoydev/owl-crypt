@@ -39,11 +39,12 @@ def persistence():
 
 
 @pytest.fixture
-def mock_emit():
-    with patch('flask_socketio.emit') as mock_emit, \
-            patch('flask.request') as mock_request:
+def mock_emit(app):
+    with app.test_request_context('/'):
+        with patch('flask_socketio.emit') as mock_emit, \
+                patch('flask.request') as mock_request:
 
-        mock_emit.return_value = None
-        mock_request.namespace = "/"
+            mock_emit.return_value = None
+            mock_request.namespace = "/"
 
-        yield mock_emit, mock_request
+            yield mock_emit, mock_request
