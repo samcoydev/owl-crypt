@@ -2,8 +2,8 @@ from unittest.mock import Mock
 
 import core.engine.dungeon_registry as dungeon_registry
 import core.base.objects.character as c
-from utils.dungeon_test_utils import DungeonTestUtils
-from utils.user_utils import create_test_user_and_add_to_game
+from tests.utils.dungeon_test_utils import DungeonTestUtils
+from tests.utils.user_utils import create_test_user_and_add_to_game
 
 
 def test_help_command(game_engine, persistence, mock_emit):

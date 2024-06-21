@@ -1,7 +1,7 @@
 import core.stock.components.base.room_base as rb
 import core.stock.components.base.doorway_base as db
 import core.base.types.direction_type as dt
-from stock.enemies.enemy_skeleton import SkeletonEnemy
+from core.stock.enemies.enemy_skeleton import SkeletonEnemy
 
 
 class MainTomb(rb.RoomBase):

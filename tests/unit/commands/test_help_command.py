@@ -1,7 +1,7 @@
 import pytest
 
 from core.engine.command_registry import command_registry
-from utils.user_utils import create_test_user_and_add_to_game
+from tests.utils.user_utils import create_test_user_and_add_to_game
 
 
 @pytest.fixture(scope="module")
