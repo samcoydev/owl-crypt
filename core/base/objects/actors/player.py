@@ -42,9 +42,9 @@ class PlayerActor(Actor):
     def inspect_entity(self, entity_key: str):
         """Prompt to inspect an entity by name in the players current room"""
         if entity_key == "room":
-            return self.current_room.inspect_string
+            return self.current_room.inspect_string, True
 
-        return self.current_room.entities[entity_key].inspect(self)
+        return self.current_room.entities[entity_key].inspect(self), True
 
     def interact_with_entity(self, entity_key: str) -> tuple:
         """
@@ -89,12 +89,12 @@ class PlayerActor(Actor):
             self.current_room.artifacts.append(item_artifact)
             drop_msg = f"* {self.character.character_name} dropped {item_key}"
             self.game_engine.game_manager.broadcast_to_room(drop_msg, self.current_room, self)
-        return msg
+        return msg, was_successful
 
     def give_item(self, item_key: str, target_player_name):
         """Give an item to another player"""
         if item_key not in self.inventory:
-            return "You don't have that item."
+            return "You don't have that item.", False
 
         target_player = self.game_engine.game_manager.get_player_in_room_by_character_name(self.current_room,
                                                                                            target_player_name)
@@ -102,13 +102,13 @@ class PlayerActor(Actor):
         msg, was_successful = target_player.add_to_inventory(item_key, item)
         if was_successful:
             self.remove_from_inventory(item_key)
-            return f"* You gave {target_player.character.character_name} {item.name}"
-        return f"* You couldn't give {target_player.character.character_name} {item.name}"
+            return f"* You gave {target_player.character.character_name} {item.name}", True
+        return f"* You couldn't give {target_player.character.character_name} {item.name}", False
 
     def get_inventory_string(self):
         """Get the players inventory"""
         return f"--== Inventory {self.get_remaining_space_string()} ==--\n" + '\n'.join(
-            [item.name for item in self.inventory.values()])
+            [item.name for item in self.inventory.values()]), True
 
     def get_remaining_space_string(self):
         return f"({len(self.inventory)}/{self.max_inventory_size})"
@@ -116,13 +116,13 @@ class PlayerActor(Actor):
     def use_item(self, item_key: str, args: list):
         """Use an item from the players inventory"""
         if item_key not in self.inventory:
-            return "You don't have that item."
+            return "You don't have that item.", False
 
-        return self.inventory[item_key].use(self, args)
+        return self.inventory[item_key].use(self, args), True
 
     def can_afford_energy_cost(self, cmd_name):
         energy_cost = self.character.get_energy_cost(cmd_name.lower())
-        return self.energy_points > 0 and self.energy_points - energy_cost >= 0
+        return (self.energy_points > 0) and (self.energy_points - energy_cost) >= 0
 
     def spend_energy_points(self, cmd_name):
         command_name = cmd_name.lower()

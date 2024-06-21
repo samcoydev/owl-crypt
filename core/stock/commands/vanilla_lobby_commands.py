@@ -11,48 +11,48 @@ class Characters(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
         if len(args) == 0:
             if len(user.characters) == 0:
-                return "You have no characters"
+                return "You have no characters", False
 
             characters_string = "Characters:\n"
             for character in user.characters:
                 characters_string += f"{character.character_name} - {character.class_name}\n"
 
-            return characters_string
+            return characters_string, True
 
         if args[0].lower() == "create":
             if len(args) < 3:
-                return "Please provide a name and class for your character\n\n" + self.get_possible_classes_string()
+                return "Please provide a name and class for your character\n\n" + self.get_possible_classes_string(), False
             if len(args) > 3:
-                return "Character name cannot contain spaces\n"
+                return "Character name cannot contain spaces\n", False
             return self.create_character(user, args[1], args[2])
 
         character_name = " ".join(args).lower()
 
         for character in user.characters:
             if character.character_name.lower() == character_name:
-                return character.get_stats_string()
+                return character.get_stats_string(), True
             else:
-                return "You do not have a character with that name"
+                return "You do not have a character with that name", False
 
     def create_character(self, user: 'u.User', character_name: str, class_name: str):
         if character_name is None or character_name == "":
-            return "Please provide a name for your character"
+            return "Please provide a name for your character", False
 
         if len(character_name) > 20:
-            return "Character name is too long"
+            return "Character name is too long", False
 
         if class_name is None or class_name == "" or class_name not in class_registry.keys():
-            return "Please provide a valid class for your character\n\n" + self.get_possible_classes_string()
+            return "Please provide a valid class for your character\n\n" + self.get_possible_classes_string(), False
 
         if len(user.characters) >= 5:
-            return "You already have the maximum amount of characters"
+            return "You already have the maximum amount of characters", False
 
         for character in user.characters:
             if character.character_name.lower() == character_name.lower():
-                return "You already have a character with that name"
+                return "You already have a character with that name", False
 
         user.create_new_character(character_name, class_name)
-        return f"Created character {character_name}"
+        return f"Created character {character_name}", True
 
     def get_possible_classes_string(self) -> str:
         result = "Possible classes:\n"
@@ -76,6 +76,7 @@ class Difficulty(c.Command):
             self.game_engine.game_manager.difficulty_multiplier = 1.5
         if args[0] == "nightmare":
             self.game_engine.game_manager.difficulty_multiplier = 2
+        return "Changed difficulty to " + args[0].capitalize(), True
 
     def get_help_string(self) -> str:
         return "Change the difficulty of the game\n"
@@ -88,12 +89,12 @@ class Dungeons(c.Command):
         dungeons_string = "Dungeons:\n"
         if len(registry) == 0:
             dungeons_string += "No dungeons available"
-            return dungeons_string
+            return dungeons_string, True
 
         for dungeon_technical_name in registry:
             dungeons_string += f"{registry[dungeon_technical_name].dungeon_name} - {dungeon_technical_name}\n"
 
-        return dungeons_string
+        return dungeons_string, True
 
     def get_help_string(self) -> str:
         return "View a list of dungeons"
@@ -107,7 +108,7 @@ class Lobby(c.Command):
         lobby_string = "Lobby:\n"
         if len(users) == 0:
             lobby_string += "No users in lobby"
-            return lobby_string
+            return lobby_string, True
 
         for _user in users:
             lobby_string += f"{_user.username} - "
@@ -118,7 +119,7 @@ class Lobby(c.Command):
             else:
                 lobby_string += "NOT READY\n"
 
-        return lobby_string
+        return lobby_string, True
 
     def get_help_string(self) -> str:
         return "Show the list of players and their ready status"
@@ -152,10 +153,10 @@ class Select(c.Command):
         dungeon = dungeon_registry.dungeon_registry.get(args[0])
 
         if dungeon is None:
-            return "Please provide a valid dungeon name"
+            return "Please provide a valid dungeon name", False
 
         self.game_engine.game_manager.set_dungeon(dungeon)
-        return f"Selected dungeon {dungeon.dungeon_name}"
+        return f"Selected dungeon {dungeon.dungeon_name}", True
 
     def get_help_string(self) -> str:
         return "Select a dungeon to play in. Sets all players as unready"
@@ -175,18 +176,18 @@ class Upgrade(c.Command):
 
     def execute(self, user: 'u.User', args: List[str]):
         if user.chosen_character is None:
-            return "You must pick a character before you can upgrade any stats"
+            return "You must pick a character before you can upgrade any stats", False
 
         if len(args) != 1:
-            return "Please provide a stat to upgrade"
+            return "Please provide a stat to upgrade", False
 
         stat_name = " ".join(args).replace(" ", "_").lower()
 
         if stat_name not in user.chosen_character.stats_dicts or stat_name == "stat_points":
-            return "Please provide a valid stat to upgrade"
+            return "Please provide a valid stat to upgrade", False
 
         if user.chosen_character.stats_dicts["stat_points"] <= 0:
-            return "You do not have any stat points to spend"
+            return "You do not have any stat points to spend", False
 
         result = user.chosen_character.upgrade_stat(stat_name)
 
@@ -199,7 +200,7 @@ class Upgrade(c.Command):
 
 class QuickStart(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
-        return self.game_engine.game_manager.quick_start()
+        return self.game_engine.game_manager.quick_start(), True
 
     def get_help_string(self) -> str:
         return "Start with character 'testchar' and dungeon 'the_crypt'"

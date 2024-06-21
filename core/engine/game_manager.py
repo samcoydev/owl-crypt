@@ -33,8 +33,7 @@ class GameManager:
 
     def start_game(self):
         if not self.can_start_game:
-            return
-        self.game_engine.game_state_machine.cycle()
+            return "Couldn't start the game.", False
         self._dungeon.setup_dungeon(game_manager=self)
         self.init_player_actors()
         self._dungeon.init_starting_room(self.get_all_player_usernames())
@@ -44,6 +43,7 @@ class GameManager:
         self.broadcast_message(f"Turn order:\n{self.get_turn_order_string()}\n\n\n")
         self.broadcast_message(f"---=== {self.game_engine.game_manager.get_dungeon_name()} ===---\n")
         self.broadcast_message(self._dungeon.get_starting_room().view_room(first_visit=True))
+        return "Game started", True
 
     def quick_start(self):
         self.set_dungeon(dungeon_registry.dungeon_registry.get("the_crypt"))

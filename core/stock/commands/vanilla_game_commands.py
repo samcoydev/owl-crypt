@@ -9,9 +9,9 @@ class Attack(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
         if len(args) > 0:
             enemy_name = args[0]
-            print(f"Attack a {enemy_name}")
+            return f"Attack a {enemy_name}", True
 
-        print("Attack")
+        return "Attack", True
 
     def get_help_string(self) -> str:
         return "Attack an enemy with your physical weapon\nATTACK - Attack an enemy by name with your " \
@@ -20,7 +20,7 @@ class Attack(c.Command):
 
 class Block(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
-        print(f"Block for {user.character_name}")
+        return f"Block for {user.player_actor.character_name}", True
 
     def get_help_string(self) -> str:
         return "Build up defense in battle"
@@ -58,9 +58,9 @@ class Help(c.Command):
 
     def execute(self, user: 'u.User', args: List[str]):
         if len(args) > 0:
-            return self.compose_detailed_help_string(args[0])
+            return self.compose_detailed_help_string(args[0]), True
 
-        return self.compose_help_string()
+        return self.compose_help_string(), True
 
     def get_tutorial_str(self) -> str:
         return (
@@ -113,12 +113,9 @@ class Interact(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
         target = args[0]
         response = user.player_actor.interact_with_entity(target)
-        if response is None:
-            return "That doesn't exist."
-        elif response[1]:
-            self.game_engine.game_manager.next_player_turn()
+        # self.game_engine.game_manager.next_player_turn()
 
-        return response[0]
+        return response
 
     def get_help_string(self) -> str:
         return "Interact with an object"

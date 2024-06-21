@@ -13,7 +13,13 @@ class Command(ABC):
         self.requires_args = requires_args
         self.command_type = command_type
 
-    def execute(self, user: 'u.User', args: List[str]):
+    def execute(self, user: 'u.User', args: List[str]) -> tuple:
+        """
+        Override this method to create custom logic for command execution.
+        :param user: The user entering the command
+        :param args: The arguments for the command
+        :return: A tuple containing the response message and a boolean indicating success
+        """
         pass
 
     def call_execute(self, user: 'u.User', args: List[str]):

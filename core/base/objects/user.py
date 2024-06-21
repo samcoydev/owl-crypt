@@ -42,11 +42,11 @@ class User:
                 self.chosen_character = c
                 if c.stats_dicts is None:
                     c.stats_dicts = char.get_base_stats()
-                return f"You have chosen {c.character_name}"
+                return f"You have chosen {c.character_name}", True
             else:
                 self.chosen_character = None
 
-        return "You do not have a character with that name"
+        return "You do not have a character with that name", False
 
     def map_to_savable_dict(self):
         savable_dict = {
