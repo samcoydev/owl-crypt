@@ -26,7 +26,11 @@ class GameStateMachine(StateMachine):
         self.manager.set_up_lobby()
 
     def on_enter_player_turn(self):
-        self.manager.tick_all_player_actors()
+        """
+        Event for when the game state starts the rounds of player turns.
+        :return: None
+        """
+        self.manager.begin_round_of_player_turns()
 
     def on_enter_enemy_turn(self):
         self.manager.tick_all_enemy_actors()

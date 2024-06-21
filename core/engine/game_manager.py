@@ -27,7 +27,7 @@ class GameManager:
         self.current_player_turn_index = 0
 
         self.enemy_turn_order = []
-        self.current_enemy_turn_index = 0
+        self.current_enemy_turn_index = -1
         self.can_start_game = False
         self.game_in_session = False
 
@@ -39,6 +39,7 @@ class GameManager:
         self._dungeon.init_starting_room(self.get_all_player_usernames())
         self.format_player_turn_order()
         self.game_in_session = True
+        self.game_engine.game_state_machine.cycle()
 
         self.broadcast_message(f"Turn order:\n{self.get_turn_order_string()}\n\n\n")
         self.broadcast_message(f"---=== {self.game_engine.game_manager.get_dungeon_name()} ===---\n")
@@ -55,6 +56,11 @@ class GameManager:
         return ""
 
     def is_players_turn(self, username):
+        """
+        Check if it is the player's turn
+        :param username: The username of the logged user
+        :return: True if it is the player's turn, False otherwise
+        """
         return self.player_turn_order[self.current_player_turn_index] == username
 
     def get_turn_order_string(self):
@@ -75,13 +81,34 @@ class GameManager:
     def format_enemy_turn_order(self):
         self.enemy_turn_order = list(self.enemy_actors.keys())
 
+    def begin_round_of_player_turns(self):
+        self.tick_all_player_actors()
+        self.current_player_turn_index = -1
+        self.next_player_turn()
+
+    def start_player_turn(self, username) -> None:
+        """
+        Start the player's turn and notify them
+        :param username: The players username
+        :return: None
+        """
+        actor = self.player_actors[username]
+        actor.start_turn()
+        self.message_player(username, "It is now your turn.")
+
     def next_player_turn(self):
-        self.current_player_turn_index = self.current_player_turn_index + 1
+        """
+        Cycle to the next player's turn. If the last player has taken their turn, cycle the game state. The first player
+        will be started in `begin_round_of_player_turns` from the state manager.
+        :return: None
+        """
+        self.current_player_turn_index += 1
+
+        # If the last player has just taken their turn, cycle the game state
         if self.current_player_turn_index >= len(self.player_turn_order):
             self.game_engine.game_state_machine.cycle()
-            self.current_player_turn_index = 0
         else:
-            self.message_player(self.player_turn_order[self.current_player_turn_index], "It is your turn")
+            self.start_player_turn(self.player_turn_order[self.current_player_turn_index])
 
     def next_enemy_turn(self):
         self.current_enemy_turn_index = self.current_enemy_turn_index + 1
@@ -129,9 +156,9 @@ class GameManager:
             self.broadcast_message(f"{user.chosen_character.character_name} is ready")
             user.is_ready = True
             self.check_start_game_conditions()
-            return "You are now ready"
+            return "You are now ready", True
         else:
-            return "You must pick a character first"
+            return "You must pick a character first", False
 
     def check_start_game_conditions(self):
         if self._dungeon is None:

@@ -23,6 +23,7 @@ class PlayerActor(Actor):
         super().__init__(game_engine, current_room, character.stats_dicts["level"])
         self.user = user
         self.character = character
+        self.character.current_player_actor = self
         self.inventory = {}
         self.max_inventory_size = 5
 
