@@ -33,6 +33,15 @@ class CommandInterpreter:
         if new_command.requires_args and len(args) == 0:
             return "Please provide the necessary arguments. Use HELP for more information"
 
-        return new_command.call_execute(user=user, args=args)
+        execute_results = new_command.call_execute(user=user, args=args)
+
+        self.check_to_move_next_turn(user, new_command.energy_cost())
+
+        return execute_results
+
+    def check_to_move_next_turn(self, user, energy_cost):
+        if user.player_actor.energy_points <= 0 and energy_cost > 0:
+            self.engine.game_manager.next_player_turn()
+
 
 
