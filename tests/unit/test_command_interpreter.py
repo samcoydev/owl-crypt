@@ -9,13 +9,13 @@ from tests.utils.user_utils import create_test_user_and_add_to_game
 def test_help_command(game_engine, persistence, mock_emit):
     user = create_test_user_and_add_to_game("test_interpreter_user", game_engine.game_manager)
     result = game_engine.command_interpreter.interpret("help", user)
-    assert result != "Unknown command"
+    assert result != "Unknown command", False
 
 
 def test_dungeons_command(game_engine, persistence, mock_emit):
     user = create_test_user_and_add_to_game("test_interpreter_user", game_engine.game_manager)
     result = game_engine.command_interpreter.interpret("dungeons", user)
-    assert result == "Dungeons:\nThe Crypt - the_crypt\n"
+    assert result == "Dungeons:\nThe Crypt - the_crypt\n", True
 
 
 def test_lobby_command_no_users(game_engine, persistence, mock_emit):
@@ -23,13 +23,13 @@ def test_lobby_command_no_users(game_engine, persistence, mock_emit):
     game_engine.game_manager.users_in_session = {}
 
     result = game_engine.command_interpreter.interpret("lobby", user)
-    assert result == "Lobby:\nNo users in lobby"
+    assert result == "Lobby:\nNo users in lobby", True
 
 
 def test_lobby_command(game_engine, persistence, mock_emit):
     user = create_test_user_and_add_to_game("test_interpreter_user", game_engine.game_manager)
     result = game_engine.command_interpreter.interpret("lobby", user)
-    assert result == "Lobby:\ntest_interpreter_user - NOT READY\n"
+    assert result == "Lobby:\ntest_interpreter_user - NOT READY\n", True
 
     # "Pick" a character for the player.
     char = Mock(spec=c.Character)
@@ -37,29 +37,29 @@ def test_lobby_command(game_engine, persistence, mock_emit):
     user.chosen_character = char
 
     ready_result = game_engine.command_interpreter.interpret("ready", user)
-    assert ready_result == "You are now ready"
+    assert ready_result == "You are now ready", True
 
     result = game_engine.command_interpreter.interpret("lobby", user)
-    assert result == "Lobby:\ntest_interpreter_user - Test Character - READY\n"
+    assert result == "Lobby:\ntest_interpreter_user - Test Character - READY\n", True
 
 
 def test_pick_command_no_args(game_engine, persistence, mock_emit):
     user = create_test_user_and_add_to_game("test_interpreter_user", game_engine.game_manager)
     result = game_engine.command_interpreter.interpret("pick", user)
-    assert result == "Please provide the necessary arguments. Use HELP for more information"
+    assert result == "Please provide the necessary arguments. Use HELP for more information", False
 
 
 def test_pick_command_invalid_args(game_engine, persistence, mock_emit):
     user = create_test_user_and_add_to_game("test_interpreter_user", game_engine.game_manager)
     result = game_engine.command_interpreter.interpret("pick Ron The Mighty", user)
-    assert "You do not have a character with that name" == result
+    assert "You do not have a character with that name", False == result
 
 
 def test_pick_command(game_engine, persistence, mock_emit):
     user = create_test_user_and_add_to_game("test_interpreter_user", game_engine.game_manager)
     user.create_new_character("Ron The Mighty", "paladin")
     result = game_engine.command_interpreter.interpret("pick Ron The Mighty", user)
-    assert "You have chosen Ron The Mighty" == result
+    assert "You have chosen Ron The Mighty", True == result
     assert user.chosen_character.character_name == "Ron The Mighty"
 
 

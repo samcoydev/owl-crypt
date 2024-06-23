@@ -113,7 +113,6 @@ class Interact(c.Command):
     def execute(self, user: 'u.User', args: List[str]):
         target = args[0]
         response = user.player_actor.interact_with_entity(target)
-        # self.game_engine.game_manager.next_player_turn()
 
         return response
 
@@ -153,6 +152,7 @@ class Use(c.Command):
         item_key = args[0]
         return user.player_actor.use_item(item_key, args[1:])
 
+    @property
     def energy_cost(self):
         return 1
 

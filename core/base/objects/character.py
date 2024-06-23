@@ -87,7 +87,7 @@ class Character(ABC):
         :return: The energy cost, or the default energy cost
         """
         command = command_registry[command_name.lower()]
-        return self._command_weight_overrides.get(command_name, command.energy_cost())
+        return self._command_weight_overrides.get(command_name, command.energy_cost)
 
     def get_stats_string(self) -> str:
         """Returns a string of the characters stats"""

@@ -52,7 +52,7 @@ def test_give_item_success(test_users):
     assert player_a.inventory["test_key"].name == item_name
     assert len(player_b.inventory) == 0
 
-    result = player_a.give_item("test_key", target_name)
+    result = player_a.give_item("test_key", target_name)[0]
     assert result == success_str
     assert len(player_a.inventory) == 0
     assert len(player_b.inventory) == 1
@@ -63,7 +63,7 @@ def test_give_item_couldnt_give(test_users):
     player_a, player_b, game_engine = test_users
     item_name = "Key"
     target_name = player_b.character.character_name
-    couldnt_give_str = f"* You couldn't give {target_name} {item_name}"
+    couldnt_give_str = f"* You couldn't give {target_name} {item_name}", False
 
     helper_fill_inventory("Filler Key", "test_filler_key", player_b)
     helper_give_item(item_name, "test_key", player_a)
@@ -81,7 +81,7 @@ def test_give_item_couldnt_give(test_users):
 def test_give_item_fail(test_users):
     player_a, player_b, game_engine = test_users
     target_name = player_b.character.character_name
-    fail_str = "You don't have that item."
+    fail_str = "You don't have that item.", False
 
     assert len(player_a.inventory) == 0
     assert len(player_b.inventory) == 0
@@ -95,7 +95,7 @@ def test_give_item_fail(test_users):
 def test_drop_item_success(test_users):
     player_a, player_b, game_engine = test_users
     item_name = "Key"
-    success_msg = f"* You dropped __test_key__"
+    success_msg = f"* You dropped __test_key__", True
     current_room = player_a.current_room
 
     helper_give_item(item_name, "test_key", player_a)

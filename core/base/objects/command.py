@@ -49,7 +49,7 @@ class Command(ABC):
             # Just get the message
             response = response[0]
         else:
-            response = self.execute(user, args)
+            response = self.execute(user, args)[0]
 
         return response
 
