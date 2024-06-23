@@ -40,7 +40,7 @@ class CommandInterpreter:
         return execute_results
 
     def check_to_move_next_turn(self, user, energy_cost):
-        if user.player_actor.energy_points <= 0 and energy_cost > 0:
+        if user.player_actor.energy_points <= 0 < energy_cost:
             self.engine.game_manager.next_player_turn()
 
 
