@@ -86,6 +86,11 @@ class GameManager:
         self.current_player_turn_index = -1
         self.next_player_turn()
 
+    def begin_round_of_enemy_turns(self):
+        self.tick_all_enemy_actors()
+        self.current_enemy_turn_index = -1
+        self.next_enemy_turn()
+
     def start_player_turn(self, username) -> None:
         """
         Start the player's turn and notify them
