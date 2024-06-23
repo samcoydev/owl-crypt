@@ -23,6 +23,14 @@ def test_users(dungeon, game_engine, mock_emit, persistence):
     yield player_a, player_b, game_engine
 
 
+@pytest.fixture
+def single_user(dungeon, game_engine, mock_emit, persistence):
+    _user = create_and_ready_users(1, game_engine.game_manager)
+    game_engine.game_manager.start_game()
+    player = _user[0].player_actor
+    yield player
+
+
 def helper_give_item(item_name, key, player):
     item = Item(item_name, item_name, "test desc")
     player.add_to_inventory(key, item)
@@ -121,6 +129,7 @@ def test_use_spends_energy(test_users, game_engine):
 
     assert player_a.energy_points == 4
 
+
 def test_end_turn_by_spending_all_points(test_users, game_engine):
     player_a, player_b, game_engine = test_users
     manager = game_engine.game_manager
@@ -134,3 +143,18 @@ def test_end_turn_by_spending_all_points(test_users, game_engine):
 
     assert player_a.energy_points == 0
     assert manager.is_players_turn(player_b.user.username)
+
+
+def test_end_turn_single_player(single_user, game_engine):
+    player = single_user
+    manager = game_engine.game_manager
+    helper_give_item("Key", "test_key", player)
+
+    for i in range(5):
+        command_result = game_engine.command_interpreter.interpret("use test_key", player.user)
+        assert command_result == PLACEHOLDER_MESSAGE
+        assert player.energy_points == 4 - i
+
+    assert player.energy_points == 0
+
+    assert game_engine.game_state_machine.current_state.id == "enemy_turn"
