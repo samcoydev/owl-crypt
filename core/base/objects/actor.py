@@ -32,10 +32,14 @@ class Actor(ABC):
     def __post_init__(self):
         self.current_target = None
 
-    def tick(self):
+    def tick(self) -> None:
+        """
+        Tick all events that should run at the beginning of the player turn cycle.
+        :return: None
+        """
         self._tick_status_effects()
 
-    def _tick_status_effects(self):
+    def _tick_status_effects(self) -> None:
         """
         Loops through all active status effects and applies them to the actor, while also decreasing the half-life of
         the status effect by one.
@@ -97,10 +101,19 @@ class Actor(ABC):
         """
         self.set_health(self.health_points + heal_amount)
 
-    def set_health(self, hp: int):
+    def set_health(self, hp: int) -> None:
+        """
+        Set the actors health
+        :param hp: number to set the health to
+        :return: None
+        """
         self.health_points = hp
 
-    def map_stats_to_savable_dict(self):
+    def map_stats_to_savable_dict(self) -> dict:
+        """
+        Maps the actors stats to a dictionary, so it can be saved elsewhere.
+        :return stat_dict: Dictionary of stats to save
+        """
         return {
             "level": self.level,
             "health_points": self.health_points,
