@@ -1,7 +1,7 @@
 import pytest
 
+from base.constants import NON_EXISTENT
 from core.base.objects.item import Item, PLACEHOLDER_MESSAGE
-from tests.utils.dungeon_test_utils import DungeonTestUtils
 from tests.utils.user_utils import create_and_ready_users
 
 
@@ -22,6 +22,10 @@ def helper_give_item(item_name, key, player):
 def helper_fill_inventory(item_name, key, player):
     player.max_inventory_size = 1
     helper_give_item(item_name, key, player)
+
+
+def helper_run_command(engine, command, player):
+    return engine.command_interpreter.interpret(command, player)
 
 
 def test_give_item_success(test_users):
