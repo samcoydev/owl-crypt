@@ -145,3 +145,43 @@ def test_end_turn_single_player(single_user, game_engine):
     assert player.energy_points == 0
 
     assert game_engine.game_state_machine.current_state.id == "enemy_turn"
+
+
+def test_interact_with_entity_doorway(single_user, game_engine, dungeon):
+    player = single_user
+    assert game_engine.game_manager.is_players_turn(player.user.username)
+    north_door = player.current_room.doorways.get("north")
+    assert north_door
+
+    result = player.interact_with_entity(north_door.entity_key)
+    assert result[1]
+    assert player.current_room.room_coordinates == (0, 1)
+
+    result = player.interact_with_entity(north_door.entity_key)
+    assert not result[1]
+    assert player.current_room.room_coordinates == (0, 1)
+
+
+def test_attack_enemy_actor(single_user, game_engine, dungeon):
+    player = single_user
+
+    # Assume no equipped item
+    assert len(player.inventory) == 0
+    assert game_engine.game_manager.is_players_turn(player.user.username)
+
+    result = helper_run_command(game_engine, "interact door_north", player.user)
+    # Assert it was successful
+    assert result != NON_EXISTENT
+    assert player.current_room.room_coordinates == (0, 1)
+
+    enemy = player.current_room.enemies[0]
+    assert enemy.current_target is not None and enemy.current_target.user.username == player.user.username
+
+    # TODO (Attributes) - This will need to be reworked pending this
+    max_hp = enemy.health_points
+
+    # TODO (Actor vs. Actor) - Create a new set of tests to test stat changes. Rigidity points shouldn't be tested here.
+    base_atk = player.base_attack_damage
+    attack_result = player.attack(enemy.enemy_id)
+    assert attack_result[1]
+
