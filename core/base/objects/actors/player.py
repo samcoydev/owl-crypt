@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from base.constants import NON_EXISTENT
 from core.base.objects.actor import Actor
 from core.stock.items.item_artifact import ItemArtifact
 
@@ -56,7 +57,7 @@ class PlayerActor(Actor):
         """
         entity = self.current_room.entities.get(entity_key)
         if entity is None:
-            return "That doesn't exist.", False
+            return NON_EXISTENT, False
 
         return entity.interact(self)
 
