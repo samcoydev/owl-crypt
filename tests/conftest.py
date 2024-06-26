@@ -3,6 +3,7 @@ from unittest.mock import patch
 import pytest
 from core.server import create_app
 from core.engine.engine import Engine
+from utils.dungeon_test_utils import DungeonTestUtils
 
 
 @pytest.fixture
@@ -48,3 +49,12 @@ def mock_emit(app):
             mock_request.namespace = "/"
 
             yield mock_emit, mock_request
+
+
+@pytest.fixture
+def dungeon(game_engine, mock_emit):
+    dungeon = DungeonTestUtils.create_test_dungeon("Test Dungeon")
+    game_engine.game_manager.set_dungeon(dungeon)
+    dungeon.setup_dungeon(game_engine.game_manager)
+
+    return dungeon
