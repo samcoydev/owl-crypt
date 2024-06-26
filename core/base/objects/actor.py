@@ -102,6 +102,7 @@ class Actor(ABC):
 
     def map_stats_to_savable_dict(self):
         return {
+            "level": self.level,
             "health_points": self.health_points,
             "spell_points": self.spell_points,
             "rigidity_points": self.rigidity_points,
