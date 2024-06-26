@@ -13,6 +13,7 @@ class Actor(ABC):
     def __init__(self, game_engine, current_room, level, health_points=1, spell_points=1, rigidity_points=1,
                  weight_limit=1, base_attack_damage=1, base_magic_damage=1, stat_points=0, exp_gained=0,
                  session_exp_gained=0, signature_uses=0, active_status_effects=None, current_target=None):
+        # TODO (Attributes) - Break attributes into their own class for max values
         self.game_engine = game_engine
         self.current_room = current_room
         self.level = level
