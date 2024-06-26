@@ -20,9 +20,7 @@ def test_init(setup):
 
 # TODO: Test traversing. Needs a system for players moving between rooms
 
-def test_get_room_on_other_side(setup, game_engine):
+def test_get_room_on_other_side(setup, game_engine, dungeon):
     _, doorway = setup
-    dungeon = DungeonTestUtils.create_test_dungeon("Test Dungeon")
-    dungeon.setup_dungeon(game_engine.game_manager)
 
     assert doorway._get_room_on_other_side(dungeon.rooms[(0, 0)]) == dungeon.rooms[(0, 1)]

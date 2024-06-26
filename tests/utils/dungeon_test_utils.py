@@ -3,6 +3,7 @@ import core.stock.components.base.room_base as room_base
 import core.stock.components.base.doorway_base as doorway_base
 import core.base.types.direction_type as direction_type
 from core.base.types.enemy_type import EnemyType
+from stock.enemies.enemy_skeleton import SkeletonEnemy
 
 
 class DungeonTestUtils:
@@ -10,6 +11,7 @@ class DungeonTestUtils:
     def create_test_dungeon(dungeon_name: str) -> 'dungeon_base.DungeonBase':
         class TestDungeon(dungeon_base.DungeonBase):
             def setup_dungeon(self, game_manager):
+                super().setup_dungeon(game_manager)
                 # Define the setup logic for the test dungeon
                 self.add_room(DungeonTestUtils.create_test_rooms()[0]())
                 self.add_room(DungeonTestUtils.create_test_rooms()[1]())
@@ -35,8 +37,11 @@ class DungeonTestUtils:
             def init_doorways(self) -> None:
                 self.add_doorway(doorway_base.DoorwayBase(direction_type.Direction.SOUTH, "Wooden Door"))
 
-            def view_room(self):
+            def view_room(self, first_visit=False):
                 return "This is test room B"
+
+            def init_enemies(self) -> None:
+                self.add_enemy("skeleton", SkeletonEnemy())
 
         return TestRoomA, TestRoomB
 
