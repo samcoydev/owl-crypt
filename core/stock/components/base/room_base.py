@@ -114,6 +114,14 @@ class RoomBase(ABC):
             msg += message + "\n"
         return msg
 
+    def get_enemy_by_id(self, id):
+        """
+        Get enemy in the room by its ID
+        :param id: The ID of the enemy to get
+        :return: The enemy actor, or None if no actor was found
+        """
+        return next((e for e in self.enemies if e.enemy_id == id), None)
+
     def __repr__(self) -> str:
         """Return a string representation of the room."""
         return f"<Room name={self.room_name} enemies={self.enemies} artifacts={self.artifacts} room_coordinates={self.room_coordinates}>"
