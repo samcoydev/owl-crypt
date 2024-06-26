@@ -137,5 +137,15 @@ class PlayerActor(Actor):
 
         self.energy_points -= energy_cost
 
+    def attack(self, actor_id):
+        """
+        Attack an enemy actor by id
+        # TODO - Make actors entities so that entities can be attacked to in some cases
+        :param actor_id: The id of the actor to attack
+        :return tuple: (message, successful)
+        """
+
+
+
     def block(self) -> tuple:
         return "Blocked!", True
