@@ -14,14 +14,6 @@ def test_users(dungeon, game_engine, mock_emit, persistence):
     yield player_a, player_b, game_engine
 
 
-@pytest.fixture
-def single_user(dungeon, game_engine, mock_emit, persistence):
-    _user = create_and_ready_users(1, game_engine.game_manager)
-    game_engine.game_manager.start_game()
-    player = _user[0].player_actor
-    yield player
-
-
 def helper_give_item(item_name, key, player):
     item = Item(item_name, item_name, "test desc")
     player.add_to_inventory(key, item)

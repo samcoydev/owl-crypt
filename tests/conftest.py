@@ -4,6 +4,7 @@ import pytest
 from core.server import create_app
 from core.engine.engine import Engine
 from utils.dungeon_test_utils import DungeonTestUtils
+from utils.user_utils import create_and_ready_users
 
 
 @pytest.fixture
@@ -58,3 +59,11 @@ def dungeon(game_engine, mock_emit):
     dungeon.setup_dungeon(game_engine.game_manager)
 
     return dungeon
+
+
+@pytest.fixture
+def single_user(dungeon, game_engine, mock_emit, persistence):
+    _user = create_and_ready_users(1, game_engine.game_manager)
+    game_engine.game_manager.start_game()
+    player = _user[0].player_actor
+    yield player
