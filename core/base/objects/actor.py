@@ -5,10 +5,8 @@ from core.engine.status_registry import status_registry
 
 class Actor(ABC):
     """
-    An actor takes the abstract idea of an entity and gives it a representation in the game world. Think Players,
-    Enemies, etc.
-
-    Would not recommend modifying at this time.
+    An Actor is a representation of a controllable object in the game world. Actors interact with other actors to
+    change their `sheet` data.
     """
     def __init__(self, game_engine, current_room, level, health_points=1, spell_points=1, rigidity_points=1,
                  weight_limit=1, base_attack_damage=1, base_magic_damage=1, stat_points=0, exp_gained=0,
