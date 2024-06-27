@@ -1,6 +1,9 @@
 from dataclasses import dataclass
-
+from typing import TYPE_CHECKING
 from base.objects.stat import Stat
+
+if TYPE_CHECKING:
+    from base.objects.role import Role
 
 DEFAULT_STATS = {
     "health_points": Stat("Health Points", 10, 10),
@@ -21,12 +24,6 @@ class DataSheet:
     for a controllable object, or actor.
     """
     name: str
-    class_name: str
-    signature_command_name: str
-    signature_max: int
-    _command_weight_overrides = {}  # command_name - energy_cost
-    signature_should_override_original_command = False
-    should_append_signature_message = False  # Should the signature message appear after the original command text?
-
+    role: 'Role'
     current_actor = None
     stats_dicts: dict = None
