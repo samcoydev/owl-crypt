@@ -217,3 +217,47 @@ Here are some additional resources that you may find helpful:
 * How to Set Up a Raspberry Pi Access Point: https://www.tomshardware.com/how-to/raspberry-pi-access-point
 * How to Host a Local Server on Raspberry Pi: https://www.tomshardware.com/news/raspberry-pi-web-server,40174.html
 * Raspberry Pi Documentation: Setting Up a Wireless Access Point: https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md
+
+## On Actors, Sheets, Roles, and Behaviours
+
+
+### Actors
+
+An 'Actor' is an adaptor, not a data container. Actors interface with the game world and other actors to modify their
+respective 'data sheets'. 
+
+For example, you send the `GIVE` command in. The system executes that command for your actor and the actor checks their 
+inventory, and then transfers the item to another actors inventory. If we used an enemy in this example, a human would 
+be replaced with a `behaviour` script that would react to its actor and sheet data and command the actor to do specific 
+actions based on whatever conditions are set by the behaviour script creator.
+
+An example of Actors being the adaptor for `Data Sheet` data and the game world is energy cost. Depending on the current
+stats in the Actors' Data Sheet, and their role, the energy cost of an action may change. The Actor object should take
+both the Data Sheet level and the game world level into account and come up with something.
+
+### Sheets
+
+A `Data Sheet` is a data container. It will contain statistics like health points, magic points, etc. It is agnostic to
+the game worlds state, and relies on the correct data / conditions to be passed in or met by the actor, and only cares
+about modifying the sheet, or notifying the room that something has changed, such as death or leveling up.
+
+### Roles
+
+A 'Role' is a rename of 'Classes' in RPG terms. You can select from Paladin, Rogue, etc. Each will have their own
+special logic and rulesets for how to modify the players datasheet.
+
+Roles are especially important when considering Energy Cost for actions. Certain Roles will be able to carry out
+certain actions multiple times, and sometimes with a discounted (or increased) energy cost.
+
+### Behaviours
+
+A 'Behaviour' at its core is the definition for which logic should be used to accomplish what goal as an NPC. It sounds
+vague, and that is by design. If you want to make a GPT powered chatbot in your game you can. If you want to make an NPC
+co-op mod you can. You want to make a basic skeleton enemy that dances before death, you can.
+
+### All Together Now
+
+'Behaviours' and 'Players' can see data from their respective 'Data Sheets' and make decisions based on that data. They
+can command their actors to interact with other actors and the game world to do a thing. Depending on the action taken,
+the Actors 'Data Sheet' will be referenced for whether the action is possible, and when modifying a stat. Depending on
+the 'Role' associated with the 'Data Sheet', there may be special logic for doing certain actions.
