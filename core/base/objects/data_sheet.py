@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from base.objects.stat import Stat
 from base.types.action import Action
 from core.engine.command_registry import command_registry
+from core.engine.role_registry import role_registry
 
 if TYPE_CHECKING:
     from base.objects.role import Role
@@ -34,7 +35,7 @@ class DataSheet:
     name: str
     role: 'Role'
     current_actor = None
-    stats_dicts: dict = None
+    stats: dict = None
 
     def level_up(self):
         """
@@ -43,18 +44,18 @@ class DataSheet:
         When leveling up, the new experience requirement should be exponentially bigger.
         :return: An Action
         """
-        self.stats_dicts["exp_gained"].value += self.current_actor.session_exp_gained
+        self.stats["exp_gained"].value += self.current_actor.session_exp_gained
         self.current_actor.session_exp_gained = 0
 
-        required_exp_for_next_level = self._get_new_experience_requirement(self.stats_dicts["level"].value)
-        if self.stats_dicts["exp_gained"].value >= required_exp_for_next_level:
-            self.stats_dicts["exp_gained"].value -= required_exp_for_next_level
-            self.stats_dicts["level"].value += 1
-            self.stats_dicts["stat_points"].value += 1
-            required_exp_for_next_level = self._get_new_experience_requirement(self.stats_dicts["level"].value)
-            if self.stats_dicts["exp_gained"].value >= required_exp_for_next_level:
+        required_exp_for_next_level = self._get_new_experience_requirement(self.stats["level"].value)
+        if self.stats["exp_gained"].value >= required_exp_for_next_level:
+            self.stats["exp_gained"].value -= required_exp_for_next_level
+            self.stats["level"].value += 1
+            self.stats["stat_points"].value += 1
+            required_exp_for_next_level = self._get_new_experience_requirement(self.stats["level"].value)
+            if self.stats["exp_gained"].value >= required_exp_for_next_level:
                 return self.level_up()
-            return Action(f"You leveled up! You are now level {self.stats_dicts['level'].value}")
+            return Action(f"You leveled up! You are now level {self.stats['level'].value}")
 
         return Action(f"You don't have enough experience points to level up!", False)
 
@@ -81,8 +82,9 @@ class DataSheet:
         :return: None
         """
         self.name = data["name"]
+        self.role = role_registry[data["role"]]
         for key, val in data["stats"].items():
-            self.stats_dicts[key].value = val
+            self.stats[key].value = val
 
     def get_energy_cost(self, command_name):
         """
@@ -99,7 +101,30 @@ class DataSheet:
         :param stats: The stats to set
         :return: None
         """
-        self.stats_dicts = stats
+        self.stats = stats
+
+    def set_stat(self, name: str, value: int):
+        """
+        Set a specific stat to a value
+        :param name: The stat name to set
+        :param value: The value to set
+        :return: None
+        """
+        self.stats[name].value = value
+
+    def map_to_savable(self):
+        """
+        Get the data sheet mapped to a dictionary of values to save
+        :return dict: The stats as a dictionary
+        """
+        savable_dict = {
+            "name": self.name,
+            "role": self.role.name,
+            "stats": {}
+        }
+        for key, stat in self.stats.items():
+            savable_dict["stats"][key] = stat.value
+        return savable_dict
 
     def get_stats_string(self) -> str:
         """
@@ -107,9 +132,9 @@ class DataSheet:
         :return: A string representation of the data sheet
         """
         stats_string = ""
-        if len(self.stats_dicts) == 0:
+        if len(self.stats) == 0:
             return "No stats to display"
-        for _, stat in self.stats_dicts.items():
+        for _, stat in self.stats.items():
             stats_string += f"{stat.name}: {stat.value}\n"
         return stats_string
 
@@ -119,17 +144,17 @@ class DataSheet:
         :param stat_name: The name of the stat to upgrade
         :return: The resulting Action
         """
-        stat_to_upgrade = self.stats_dicts[stat_name]
-        if self.stats_dicts["stat_points"].value == 0:
+        stat_to_upgrade = self.stats[stat_name]
+        if self.stats["stat_points"].value == 0:
             return Action(f"You don't have enough stat points to upgrade that.", False)
 
         if not stat_to_upgrade.is_upgradable:
             return Action(f"You can't upgrade that stat.", False)
 
-        if stat_name in self.stats_dicts:
+        if stat_name in self.stats:
             stat_to_upgrade.value += 1
-            self.stats_dicts["stat_points"].value -= 1
+            self.stats["stat_points"].value -= 1
             return Action(
-                f"Upgraded {stat_name} to {stat_to_upgrade.value}. You now have {self.stats_dicts['stat_points']} stat points remaining")
+                f"Upgraded {stat_name} to {stat_to_upgrade.value}. You now have {self.stats['stat_points']} stat points remaining")
 
         return Action("Could not upgrade that stat.", False)
