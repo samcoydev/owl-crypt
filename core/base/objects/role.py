@@ -13,7 +13,7 @@ class Role:
     name: str
     signature_command_name: str
     signature_max: int
-    _command_weight_overrides = {}  # command_name - energy_cost
+    command_weight_overrides = {}  # command_name - energy_cost
     signature_should_override_original_command = False
     should_append_signature_message = False  # Should the signature message appear after the original command text?
 
@@ -24,3 +24,11 @@ class Role:
         :return Action: The resulting Action
         """
         return Action("To Implement", False)
+
+    def set_energy_cost_override(self, overrides):
+        """
+        Set the dictionary of energy cost overrides for this role.
+        :param overrides: The dictionary to set
+        :return: None
+        """
+        self.command_weight_overrides = overrides
