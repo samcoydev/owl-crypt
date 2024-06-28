@@ -7,16 +7,21 @@ from core.engine.command_registry import command_registry
 if TYPE_CHECKING:
     from base.objects.role import Role
 
-DEFAULT_STATS = {
-    "health_points": Stat("Health Points", 10, 10),
-    "spell_points": Stat("Spell Points", 10, 10),
-    "rigidity_points": Stat("Rigidity Points", 10, 10),
-    "weight_limit": Stat("Weight Limit", 10, 10),
-    "base_attack_damage": Stat("Base Attack Damage", 10, 10),
-    "base_magic_damage": Stat("Base Magic Damage", 10, 10),
-    "stat_points": Stat("Stat Points", 10, 10),
-    "exp_gained": Stat("Experience Points", 10, 10),
+_DEFAULT_STATS = {
+    "level": Stat("Level", 99, 1, is_upgradable=False),
+    "health_points": Stat("Health Points", 10),
+    "spell_points": Stat("Spell Points", 10),
+    "rigidity_points": Stat("Rigidity Points", 10),
+    "weight_limit": Stat("Weight Limit", 10),
+    "base_attack_damage": Stat("Base Attack Damage", 10),
+    "base_magic_damage": Stat("Base Magic Damage", 10),
+    "stat_points": Stat("Stat Points", 99999, 0, is_upgradable=False),
+    "exp_gained": Stat("Experience Points", 99999, 0, is_upgradable=False),
 }
+
+
+def default_stats():
+    return copy.deepcopy(_DEFAULT_STATS)
 
 
 @dataclass
