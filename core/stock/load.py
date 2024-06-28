@@ -1,20 +1,19 @@
-
-from core.engine.character_registry import register_character_class
 from core.engine.command_registry import register_command
 from core.stock.commands.vanilla_game_commands import Attack, Block, Cast, Help, Inspect, Inventory, Sneak, SpellBook, \
     Use, Interact, Drop, Give
 from core.stock.commands.vanilla_lobby_commands import Characters, Dungeons, Difficulty, Lobby, Pick, Ready, Select, \
     Start, Upgrade, QuickStart
 from core.stock.dungeons.the_crypt import the_crypt
-from core.stock.characters import paladin
 from core.stock.status_effects import bleed, fire
 from core.engine.dungeon_registry import register_dungeon
 from core.engine.status_registry import status_registry
+from engine.role_registry import register_role
+from stock.roles.paladin import Paladin
 
 
 def load_mod(engine):
     register_commands(engine)
-    register_character_classes()
+    register_roles()
     register_dungeons()
     register_status_effects()
 
@@ -34,10 +33,10 @@ def register_commands(engine):
         register_command()(command(engine, "global"))
 
 
-def register_character_classes():
-    character_classes = [paladin.Paladin]
-    for character_class in character_classes:
-        register_character_class()(character_class)
+def register_roles():
+    roles = [Paladin]
+    for role in roles:
+        register_role(role())
 
 
 def register_dungeons():

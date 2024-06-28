@@ -1,17 +1,17 @@
 import core.engine.command_interpreter as ci
 import core.engine.game_manager as gm
 import core.engine.game_state_machine as gsm
-import core.engine.character_registry as character_registry
 import core.engine.command_registry as command_registry
 import core.engine.dungeon_registry as dungeon_registry
+import core.engine.role_registry as role_registry
 
 
 class Engine:
 
     def __init__(self):
         dungeon_registry.clear_registry()
-        character_registry.clear_registry()
         command_registry.clear_registry()
+        role_registry.clear_registry()
 
         self.game_manager = gm.GameManager(self)
         self.game_state_machine = gsm.GameStateMachine(self)

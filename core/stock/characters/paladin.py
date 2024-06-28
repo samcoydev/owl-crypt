@@ -1,7 +1,7 @@
 from core.base.objects.character import Character, get_base_stats
 
 
-class Paladin(Character):
+class OldPaladin(Character):
     def __init__(self, character_name: str):
         # This is where we could set Paladin specific stats. Paladins could start with a higher hp for example.
         super().__init__(character_name, self.__class__.__name__.lower(), "block", 2)
