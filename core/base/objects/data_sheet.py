@@ -1,3 +1,4 @@
+import copy
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from base.objects.stat import Stat
@@ -37,27 +38,51 @@ class DataSheet:
 
     def level_up(self):
         """
-        Increase the current level up by 1, handle experience point gain and resetting, and also give a stat point
-        :return: None
+        Increase the current level up by 1, handle experience point gain and resetting, and also give a stat point.
+
+        When leveling up, the new experience requirement should be exponentially bigger.
+        :return: An Action
         """
-        self.stats_dicts["exp_gained"] += self.current_actor.session_exp_gained
+        self.stats_dicts["exp_gained"].value += self.current_actor.session_exp_gained
         self.current_actor.session_exp_gained = 0
 
-        required_exp_for_next_level = int((50 * self.stats_dicts["level"] + 1) ^ 1.2)
-        if self.stats_dicts["exp_gained"] >= required_exp_for_next_level:
-            self.stats_dicts["exp_gained"] -= required_exp_for_next_level
-            self.stats_dicts["level"] += 1
-            self.stats_dicts["stat_points"] += 1
-            if self.stats_dicts["exp_gained"] >= required_exp_for_next_level:
-                self.level_up()
+        required_exp_for_next_level = self._get_new_experience_requirement(self.stats_dicts["level"].value)
+        if self.stats_dicts["exp_gained"].value >= required_exp_for_next_level:
+            self.stats_dicts["exp_gained"].value -= required_exp_for_next_level
+            self.stats_dicts["level"].value += 1
+            self.stats_dicts["stat_points"].value += 1
+            required_exp_for_next_level = self._get_new_experience_requirement(self.stats_dicts["level"].value)
+            if self.stats_dicts["exp_gained"].value >= required_exp_for_next_level:
+                return self.level_up()
+            return Action(f"You leveled up! You are now level {self.stats_dicts['level'].value}")
+
+        return Action(f"You don't have enough experience points to level up!", False)
+
+    def _get_new_experience_requirement(self, level):
+        """
+        Get an experience point requirement for the next level.
+
+        Example:
+            - Level 1 - EXP 1
+            - Level 2 - EXP 2
+            - Level 3 - EXP 26
+            - Level 4 - EXP 51
+
+        :param level: The current level
+        :return int: The next experience point requirement for the next level.
+        """
+        return round((4 * (level ** 3)) / 5)
 
     def load_saved_data(self, data: dict):
-        """Load a Character"""
-        self.name = data["name"]
-        self.stats_dicts = data["stats"]
+        """
+        Load a saved data sheet.
 
-    def set_energy_cost_override(self, overrides):
-        self._command_weight_overrides = overrides
+        :param data: The data to load
+        :return: None
+        """
+        self.name = data["name"]
+        for key, val in data["stats"].items():
+            self.stats_dicts[key].value = val
 
     def get_energy_cost(self, command_name):
         """
@@ -66,7 +91,15 @@ class DataSheet:
         :return: The energy cost, or the default energy cost
         """
         command = command_registry[command_name.lower()]
-        return self._command_weight_overrides.get(command_name, command.energy_cost)
+        return self.role.command_weight_overrides.get(command_name, command.energy_cost)
+
+    def set_stats(self, stats: dict):
+        """
+        Set the Data Sheets stats dict
+        :param stats: The stats to set
+        :return: None
+        """
+        self.stats_dicts = stats
 
     def get_stats_string(self) -> str:
         """
@@ -76,9 +109,8 @@ class DataSheet:
         stats_string = ""
         if len(self.stats_dicts) == 0:
             return "No stats to display"
-        for stat_name, stat_value in self.stats_dicts.items():
-            stat_name = stat_name.replace("_", " ").title()
-            stats_string += f"{stat_name}: {stat_value}\n"
+        for _, stat in self.stats_dicts.items():
+            stats_string += f"{stat.name}: {stat.value}\n"
         return stats_string
 
     def upgrade_stat(self, stat_name: str):
@@ -87,10 +119,17 @@ class DataSheet:
         :param stat_name: The name of the stat to upgrade
         :return: The resulting Action
         """
+        stat_to_upgrade = self.stats_dicts[stat_name]
+        if self.stats_dicts["stat_points"].value == 0:
+            return Action(f"You don't have enough stat points to upgrade that.", False)
+
+        if not stat_to_upgrade.is_upgradable:
+            return Action(f"You can't upgrade that stat.", False)
+
         if stat_name in self.stats_dicts:
-            self.stats_dicts[stat_name] += 1
-            self.stats_dicts["stat_points"] -= 1
-            stat_name = stat_name.replace("_", " ").title()
-            return Action(f"Upgraded {stat_name} to {self.stats_dicts[stat_name]}. You now have {self.stats_dicts['stat_points']} stat points remaining")
-        else:
-            return Action("Could not upgrade that stat", False)
+            stat_to_upgrade.value += 1
+            self.stats_dicts["stat_points"].value -= 1
+            return Action(
+                f"Upgraded {stat_name} to {stat_to_upgrade.value}. You now have {self.stats_dicts['stat_points']} stat points remaining")
+
+        return Action("Could not upgrade that stat.", False)
