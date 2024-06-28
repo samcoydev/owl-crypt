@@ -69,7 +69,7 @@ class Actor:
         """
         Deal damage to health points with rigidity factored in
         """
-        dmg_to_deal = damage - self.rigidity_points
+        dmg_to_deal = damage - self.data_sheet.stats["rigidity_points"].value
         if dmg_to_deal < 0:
             dmg_to_deal = 1
         self.deal_pure_damage(dmg_to_deal)
@@ -99,7 +99,7 @@ class Actor:
         :param hp: number to set the health to
         :return: None
         """
-        self.health_points = hp
+        self.data_sheet.set_stat("health_points", hp)
 
     def map_stats_to_savable_dict(self) -> dict:
         """
