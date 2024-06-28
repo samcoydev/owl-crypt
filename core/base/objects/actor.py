@@ -1,35 +1,28 @@
-from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from core.engine.status_registry import status_registry
 
+if TYPE_CHECKING:
+    from engine.engine import Engine
+    from stock.components.base.room_base import RoomBase
+    from base.objects.data_sheet import DataSheet
 
-class Actor(ABC):
+
+@dataclass
+class Actor:
     """
     An Actor is a representation of a controllable object in the game world. Actors interact with other actors to
     change their `sheet` data.
     """
-    def __init__(self, game_engine, current_room, level, health_points=1, spell_points=1, rigidity_points=1,
-                 weight_limit=1, base_attack_damage=1, base_magic_damage=1, stat_points=0, exp_gained=0,
-                 session_exp_gained=0, signature_uses=0, active_status_effects=None, current_target=None):
-        # TODO (Attributes) - Break attributes into their own class for max values
-        self.game_engine = game_engine
-        self.current_room = current_room
-        self.level = level
-        self.health_points = health_points
-        self.spell_points = spell_points
-        self.rigidity_points = rigidity_points
-        self.weight_limit = weight_limit
-        self.base_attack_damage = base_attack_damage
-        self.base_magic_damage = base_magic_damage
-        self.stat_points = stat_points
-        self.exp_gained = exp_gained
-        self.session_exp_gained = session_exp_gained
-        self.signature_uses = signature_uses
-        self.active_status_effects = active_status_effects or []
-        self.current_target = current_target
-
-    def __post_init__(self):
-        self.current_target = None
+    game_engine: 'Engine'
+    current_room: 'RoomBase'
+    data_sheet: 'DataSheet'
+    exp_gained: int = 0
+    session_exp_gained: int = 0
+    signature_uses: int = 0
+    active_status_effects = []
+    current_target = None
 
     def tick(self) -> None:
         """
@@ -157,6 +150,5 @@ class Actor(ABC):
         difficulty_multiplier = 1
         return (stat_value * 10) * difficulty_multiplier
 
-    @abstractmethod
     def kill_entity(self) -> None:
-        raise NotImplementedError("Please implement kill_entity")
+        pass
