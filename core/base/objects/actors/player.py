@@ -145,7 +145,5 @@ class PlayerActor(Actor):
         :return tuple: (message, successful)
         """
 
-
-
     def block(self) -> tuple:
         return "Blocked!", True

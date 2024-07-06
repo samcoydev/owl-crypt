@@ -2,11 +2,12 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple
 
 import core.stock.components.base.doorway_base as doorway_base
+from base.objects.actor import Actor
 from core.base.objects.actors import enemy
 from core.base.objects import artifact
 
 
-class RoomBase(ABC):
+class RoomBase:
     """A reusable class to create dungeon rooms"""
 
     def __init__(self, room_name: str, room_coordinates: Tuple[int, int]) -> None:
@@ -15,6 +16,7 @@ class RoomBase(ABC):
         """
         self.room_name = room_name
         self.room_coordinates = room_coordinates
+        self.actors = []
         self.enemies: List['enemy.EnemyActor'] = []
         self.artifacts: List['artifact.Artifact'] = []
         self.doorways: Dict[str, 'doorway_base.DoorwayBase'] = {}
@@ -52,10 +54,9 @@ class RoomBase(ABC):
     def entities(self) -> dict:
         return self.parse_entity_dict()
 
-    @abstractmethod
     def init_doorways(self) -> None:
         """Override this method to set up the rooms doorways"""
-        raise NotImplementedError("Please implement init_doorways")
+        pass
 
     def init_enemies(self) -> None:
         """Override this method to set up the rooms enemies"""
@@ -121,6 +122,14 @@ class RoomBase(ABC):
         :return: The enemy actor, or None if no actor was found
         """
         return next((e for e in self.enemies if e.enemy_id == id), None)
+
+    def get_actor_by_name(self, name):
+        """
+        Get actor in the room by its data sheet name
+        :param name: The actors data sheet name
+        :return: The actor or None if no actor was found
+        """
+        return next((a for a in self.actors if a.data_sheet.name == name), None)
 
     def __repr__(self) -> str:
         """Return a string representation of the room."""
