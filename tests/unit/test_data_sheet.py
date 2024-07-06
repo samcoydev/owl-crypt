@@ -3,15 +3,10 @@ from unittest.mock import Mock
 import pytest
 
 from core.base.objects.data_sheet import DataSheet, default_stats
-from core.engine.role_registry import register_role, role_registry, clear_registry
-from core.stock.roles.paladin import Paladin
 
 
 @pytest.fixture
-def data_sheet():
-    clear_registry()
-    register_role(Paladin())
-    role = role_registry["paladin"]
+def data_sheet(role):
     data_sheet = DataSheet("data_sheet", role)
     data_sheet.set_stats(default_stats())
     data_sheet.current_actor = Mock()

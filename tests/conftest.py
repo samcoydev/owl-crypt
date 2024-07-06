@@ -5,6 +5,8 @@ from core.server import create_app
 from core.engine.engine import Engine
 from utils.dungeon_test_utils import DungeonTestUtils
 from utils.user_utils import create_and_ready_users
+from core.engine.role_registry import register_role, role_registry, clear_registry
+from core.stock.roles.paladin import Paladin
 
 
 @pytest.fixture
@@ -67,3 +69,10 @@ def single_user(dungeon, game_engine, mock_emit, persistence):
     game_engine.game_manager.start_game()
     player = _user[0].player_actor
     yield player
+
+
+@pytest.fixture
+def role():
+    clear_registry()
+    register_role(Paladin())
+    return role_registry["paladin"]
